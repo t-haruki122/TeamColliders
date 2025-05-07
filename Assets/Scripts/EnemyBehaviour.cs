@@ -4,25 +4,30 @@ using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour
 {
-    // 自分自身
-    [SerializeField] private Transform _self;
-    // ターゲット
-    [SerializeField] private Transform _target;
-    // 視野角（度数法）
-    [SerializeField] private float _sightAngle;
-    // 視界の最大距離
-    [SerializeField] private float _maxDistance = float.PositiveInfinity;
+    // 発見UI用のビックリマークとはてなマーク
+    [SerializeField] private GameObject TMP_exclamation;
+    [SerializeField] private GameObject TMP_question;
 
-    public bool IsVisible()
-    {
-        var selfPos = _self.position;
-        var targetPos = _target.position;
+    // ゲームオブジェクト
+    private GameObject _self;
+    private GameObject _target;
 
-        // 自身の向き（正規化されたベクトル）
-        var selfDir = _self.forward;
-        
-        // ターゲットまでの向きと距離計算
-        var targetDir = targetPos - selfPos;
+    // 敵のパラメータ
+    [SerializeField] private float speed = 1.0f;
+    [SerializeField] private float _sightAngle = 30.0f;
+    [SerializeField] private float _maxDistance = 20.0f;
+
+    // 内部記憶_敵の記憶
+    private Vector3 playerPositionMemory = new Vector3(0, 0, 0);
+
+    // 内部記憶_システム変数
+    private bool isVisibleMemory = false;
+    private int internalFrameCount = -1;
+
+    public bool isInAngle()
+    {   
+        // ターゲットまでの向きと距離を計算
+        var targetDir = _target.transform.position - _self.transform.position;
         var targetDistance = targetDir.magnitude;
 
         // cos(θ/2)を計算
@@ -30,91 +35,94 @@ public class EnemyBehaviour : MonoBehaviour
 
         // 自身とターゲットへの向きの内積計算
         // ターゲットへの向きベクトルを正規化する必要があることに注意
-        var innerProduct = Vector3.Dot(selfDir, targetDir.normalized);
+        var innerProduct = Vector3.Dot(_self.transform.forward, targetDir.normalized);
 
         // 視界判定
         return innerProduct > cosHalf && targetDistance < _maxDistance;
+    }
+
+    public bool isNotObstructed()
+    {
+        // ターゲットまでの向きを計算
+        var targetDir = _target.transform.position - _self.transform.position;
+
+        // レイキャストで衝突判定
+        if (Physics.Raycast(_self.transform.position, targetDir, out RaycastHit hit))
+        {
+            return hit.collider.gameObject == _target;
+        }
+        return false;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _self = this.gameObject;
+        _target = GameObject.FindGameObjectWithTag("Player");
+        TMP_exclamation.SetActive(false);
+        TMP_question.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // 視界判定
-        var isVisible = IsVisible();
-
-        // 結果表示
-        Debug.Log("isVisible = " + isVisible);
-    }
-}
-
-/*
-webサイトからコピー(参照)
-https://nekojara.city/unity-object-sight
-
-public class SightCheckerExample : MonoBehaviour
-{
-    // 自分自身
-    [SerializeField] private Transform _self;
-
-    // ターゲット
-    [SerializeField] private Transform _target;
-
-    // 視野角（度数法）
-    [SerializeField] private float _sightAngle;
-
-    // 視界の最大距離
-    [SerializeField] private float _maxDistance = float.PositiveInfinity;
-
-    #region Logic
-
-    /// <summary>
-    /// ターゲットが見えているかどうか
-    /// </summary>
-    public bool IsVisible()
-    {
-        // 自身の位置
-        var selfPos = _self.position;
-        // ターゲットの位置
-        var targetPos = _target.position;
-
-        // 自身の向き（正規化されたベクトル）
-        var selfDir = _self.forward;
+        // 発見UIの更新
+        var isVisible = isInAngle() && isNotObstructed();
+        if (!isVisibleMemory && isVisible)
+        {
+            Start();
+            // ターゲットを発見
+            internalFrameCount = 120;
+            TMP_exclamation.SetActive(true);
+        }
+        if (isVisibleMemory && !isVisible)
+        {
+            Start();
+            // ターゲットを見失った
+            internalFrameCount = 120;
+            TMP_question.SetActive(true);
+        }
+        isVisibleMemory = isVisible;
         
-        // ターゲットまでの向きと距離計算
-        var targetDir = targetPos - selfPos;
-        var targetDistance = targetDir.magnitude;
+        // 発見UIのフレームカウント
+        if (internalFrameCount == 0)
+        {
+            Start();
+            internalFrameCount = -1;
+        }
+        if (internalFrameCount > 0)
+        {
+            internalFrameCount--;
+        }
 
-        // cos(θ/2)を計算
-        var cosHalf = Mathf.Cos(_sightAngle / 2 * Mathf.Deg2Rad);
-
-        // 自身とターゲットへの向きの内積計算
-        // ターゲットへの向きベクトルを正規化する必要があることに注意
-        var innerProduct = Vector3.Dot(selfDir, targetDir.normalized);
-
-        // 視界判定
-        return innerProduct > cosHalf && targetDistance < _maxDistance;
-    }
-
-    #endregion
-
-    #region Debug
-
-    // 視界判定の結果をGUI出力
-    private void OnGUI()
-    {
-        // 視界判定
-        var isVisible = IsVisible();
+        // メインビヘイビア
+        if (isVisible) // プレイヤーを視認しているとき
+        {
+            // プレイヤーメモリを更新
+            playerPositionMemory = _target.transform.position;
+            // プレイヤーの位置に移動
+            transform.position = Vector3.MoveTowards(transform.position, playerPositionMemory, speed * Time.deltaTime);
+        }
+        else // プレイヤーを視認していないとき
+        {
+            if (playerPositionMemory == new Vector3(0, 0, 0))
+            {
+                // プレイヤーの位置がわからない(000)ので停止、一旦何もしない
+            }
+            else
+            {
+                // 記憶したプレイヤーの位置まで動く
+                transform.position = Vector3.MoveTowards(transform.position, playerPositionMemory, speed * Time.deltaTime);
+                // 動き終わったらメモリーを000
+                if (transform.position == playerPositionMemory)
+                {
+                    playerPositionMemory = new Vector3(0, 0, 0);
+                }
+            }
+        }
 
         // 結果表示
-        GUI.Box(new Rect(20, 20, 150, 23), $"isVisible = {isVisible}");
+        // Debug.Log("isVisible:" + isVisible + " isVisibleMemory:" + isVisibleMemory + " ifc:" + internalFrameCount);
+        // Debug.Log("isInAngle: " + isInAngle() + ", isNotObstructed: " + isNotObstructed());
     }
-
-    #endregion
 }
-*/
