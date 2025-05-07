@@ -13,9 +13,38 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey("up")) transform.position += transform.forward * 0.1f;
-        if (Input.GetKey("down")) transform.position -= transform.forward * 0.1f;
-        if (Input.GetKey ("right")) transform.Rotate(0f,3.0f,0f);
-        if (Input.GetKey ("left")) transform.Rotate(0f, -3.0f, 0f);
+        /* MOVEMENT KEYBINDS */
+        if (Input.GetKey("up") || Input.GetKey("w"))
+        {
+            // move forward
+            transform.position += transform.forward * 0.1f;
+        }
+        if (Input.GetKey("down") || Input.GetKey("s"))
+        {
+            // move backward
+            transform.position -= transform.forward * 0.1f;
+        }
+        if (Input.GetKey("right") || Input.GetKey("d"))
+        {
+            // strafe right
+            transform.position += transform.right * 0.1f;
+        }
+        if (Input.GetKey("left") || Input.GetKey("a"))
+        {
+            // strafe left
+            transform.position -= transform.right * 0.1f;
+        }
+
+        /* ROTATION KEYBINDS */
+        if (Input.GetKey ("q"))
+        {
+            // rotate left
+            transform.Rotate(0f, -3.0f, 0f);
+        }
+        if (Input.GetKey ("e"))
+        {
+            // rotate right
+            transform.Rotate(0f, 3.0f, 0f);
+        }
     }
 }
