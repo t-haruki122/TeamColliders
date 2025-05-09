@@ -2,12 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.UI; // slider(HPバー)用
+
 public class EnemyBehaviour : MonoBehaviour
 {
     // 発見UI用のビックリマークとはてなマークと沈黙マーク
     private GameObject TMP_exclamation;
     private GameObject TMP_question;
     private GameObject TMP_quiet;
+
+    // HPバー用のスライダー
+    private Slider enemyHPBar;
 
     // ゲームオブジェクト
     private GameObject _self;
@@ -17,9 +22,10 @@ public class EnemyBehaviour : MonoBehaviour
     private EnemyShot enemyShot;
 
     // 敵のパラメータ
-    [SerializeField] private float speed = 1.0f;
-    [SerializeField] private float _sightAngle = 30.0f;
-    [SerializeField] private float _maxDistance = 20.0f;
+    [SerializeField] float speed = 1.0f;
+    [SerializeField] float _sightAngle = 30.0f;
+    [SerializeField] float _maxDistance = 20.0f;
+    [SerializeField] int HP = 100;
 
     // 内部記憶_敵の記憶
     private Vector3 playerPositionMemory = new Vector3(0, 0, 0);
@@ -29,7 +35,7 @@ public class EnemyBehaviour : MonoBehaviour
     private int internalFrameCount = -1;
 
     // ターゲットが円錐の中に入っているか調べる
-    public bool isInAngle()
+    private bool isInAngle()
     {   
         // ターゲットまでの向きと距離を計算
         var targetDir = _target.transform.position - _self.transform.position;
@@ -47,7 +53,7 @@ public class EnemyBehaviour : MonoBehaviour
     }
 
     // ターゲットとの間にオブジェクトがないか調べる
-    public bool isNotObstructed()
+    private bool isNotObstructed()
     {
         // ターゲットまでの向きを計算
         var targetDir = _target.transform.position - _self.transform.position;
@@ -60,7 +66,7 @@ public class EnemyBehaviour : MonoBehaviour
         return false;
     }
 
-    void reset()
+    private void reset()
     {
         TMP_exclamation.SetActive(false);
         TMP_question.SetActive(false);
@@ -76,9 +82,11 @@ public class EnemyBehaviour : MonoBehaviour
         Transform _enemyShot = transform.Find("EnemyShot");
         enemyShot = _enemyShot.GetComponent<EnemyShot>();
 
-        TMP_exclamation = transform.Find("UI/TMP_exclamation").gameObject;
-        TMP_question = transform.Find("UI/TMP_question").gameObject;
-        TMP_quiet = transform.Find("UI/TMP_quiet").gameObject;
+        enemyHPBar = transform.Find("StatusUI/Canvas/EnemyHPBar").GetComponent<Slider>();
+
+        TMP_exclamation = transform.Find("StanceUI/TMP_exclamation").gameObject;
+        TMP_question = transform.Find("StanceUI/TMP_question").gameObject;
+        TMP_quiet = transform.Find("StanceUI/TMP_quiet").gameObject;
 
         reset();
     }
@@ -86,8 +94,22 @@ public class EnemyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // 発見UIの更新
+        // HPが0以下なら自身を破壊する
+        // TODO 破壊アニメーション
+        if (HP < 0) {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        // HPバーの更新
+        enemyHPBar.value = HP;
+
+        // プレイヤーが見えるか調べる
         var isVisible = isInAngle() && isNotObstructed();
+
+        // TODO 見えなくとも、プレイヤーに攻撃されたらisVisible = trueとする。
+
+        // 発見UIの更新
         if (!isVisibleMemory && isVisible)
         {
             // ターゲットを発見
@@ -133,7 +155,10 @@ public class EnemyBehaviour : MonoBehaviour
         {
             if (playerPositionMemory == new Vector3(0, 0, 0))
             {
-                // プレイヤーの位置がわからない(000)ので停止、一旦何もしない
+                // プレイヤーの位置がわからないので停止、一旦何もしない
+
+                // 回転させてみる？ -> 微妙だったらコメントアウト
+                transform.Rotate(0, 45*Time.deltaTime, 0);
             }
             else
             {
