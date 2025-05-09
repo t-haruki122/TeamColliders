@@ -60,7 +60,8 @@ public class EnemyBehaviour : MonoBehaviour
         var targetDir = _target.transform.position - _self.transform.position;
 
         // レイキャストで衝突判定
-        if (Physics.Raycast(_self.transform.position, targetDir, out RaycastHit hit))
+        int layerMask = ~(1 << LayerMask.NameToLayer("IgnoreRaycast"));
+        if (Physics.Raycast(_self.transform.position, targetDir, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
             return hit.collider.gameObject == _target;
         }
