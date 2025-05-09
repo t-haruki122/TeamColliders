@@ -25,10 +25,11 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] float speed = 1.0f;
     [SerializeField] float _sightAngle = 30.0f;
     [SerializeField] float _maxDistance = 20.0f;
-    [SerializeField] int HP = 100;
+    [SerializeField] int maxHP = 100;
 
     // 内部記憶_敵の記憶
     private Vector3 playerPositionMemory = new Vector3(0, 0, 0);
+    public int HP; // TODO 後でprivateに！
 
     // 内部記憶_システム変数
     private bool isVisibleMemory = false;
@@ -88,6 +89,8 @@ public class EnemyBehaviour : MonoBehaviour
         TMP_question = transform.Find("StanceUI/TMP_question").gameObject;
         TMP_quiet = transform.Find("StanceUI/TMP_quiet").gameObject;
 
+        HP = maxHP;
+
         reset();
     }
 
@@ -104,7 +107,22 @@ public class EnemyBehaviour : MonoBehaviour
         // HPバーの更新
         enemyHPBar.value = HP;
 
-        // プレイヤーが見えるか調べる
+        // 敵の色の更新
+        // デフォルトカラー!!マテリアルの色変えたら変えること！！
+        Color color = new Color(0.5f, 0.5f, 0.5f);
+        if (HP < maxHP / 2)
+        {
+            // HP(50%)以下で黄色 -> 赤色に変遷
+            float _val = 0.5f - (float)HP / (float)maxHP;
+            Debug.Log(_val);
+            color = new Color(1f, 1f - 2f * _val, 0.5f - _val);
+        }
+        transform.Find("Body").GetComponent<Renderer>().material.color = color;
+        transform.Find("Body/WingRight").GetComponent<Renderer>().material.color = color;
+        transform.Find("Body/WingLeft").GetComponent<Renderer>().material.color = color;
+        transform.Find("Body/Halo").GetComponent<Renderer>().material.color = color;
+
+        // プレイヤーが見えるか？
         var isVisible = isInAngle() && isNotObstructed();
 
         // TODO 見えなくとも、プレイヤーに攻撃されたらisVisible = trueとする。
