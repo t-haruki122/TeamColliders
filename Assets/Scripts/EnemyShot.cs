@@ -7,6 +7,7 @@ public class EnemyShot : MonoBehaviour
     public GameObject shellPrefab;
     // public AudioClip sound; // TODO
     public bool isActiveEnemyShot = false;
+    public int firingRate = 60;
 
     private int frameCount = 0;
 
@@ -24,7 +25,7 @@ public class EnemyShot : MonoBehaviour
 
         frameCount += 1;
 
-        if (frameCount == 60)
+        if (frameCount == firingRate)
         {
             frameCount = 0;
             GameObject shell = Instantiate(shellPrefab, transform.position, transform.rotation);
