@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private Vector3 firstPos;
+
     // Start is called before the first frame update
     void Start()
     {
         Application.targetFrameRate = 60; // TODO マージする前に消せ！！
+        firstPos = transform.position;
     }
 
     // Update is called once per frame
@@ -46,5 +49,14 @@ public class PlayerMovement : MonoBehaviour
             // rotate right
             transform.Rotate(0f, 3.0f, 0f);
         }
+
+        /* MOVEMENT RESTRICTION */
+        if (transform.position.y < 0) transform.position = firstPos;
+
+        /* ROTATION RESTRICTION */
+        Vector3 rot = transform.eulerAngles;
+        rot.x = 0f;
+        rot.z = 0f;
+        transform.eulerAngles = rot;
     }
 }
