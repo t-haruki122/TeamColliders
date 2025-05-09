@@ -14,7 +14,7 @@ public class EnemyBehaviour : MonoBehaviour
     private GameObject _target;
 
     // 値を共有するスクリプト
-    public EnemyShot enemyShot;
+    private EnemyShot enemyShot;
 
     // 敵のパラメータ
     [SerializeField] private float speed = 1.0f;
@@ -73,7 +73,8 @@ public class EnemyBehaviour : MonoBehaviour
         _self = this.gameObject;
         _target = GameObject.FindGameObjectWithTag("Player");
 
-        enemyShot = GetComponentInChildren<EnemyShot>();
+        Transform _enemyShot = transform.Find("EnemyShot");
+        enemyShot = _enemyShot.GetComponent<EnemyShot>();
 
         TMP_exclamation = transform.Find("UI/TMP_exclamation").gameObject;
         TMP_question = transform.Find("UI/TMP_question").gameObject;
