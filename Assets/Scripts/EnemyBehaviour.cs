@@ -175,9 +175,12 @@ public class EnemyBehaviour : MonoBehaviour
             if (playerPositionMemory == new Vector3(0, 0, 0))
             {
                 // プレイヤーの位置がわからないので停止、一旦何もしない
-
                 // 回転させてみる？ -> 微妙だったらコメントアウト
                 transform.Rotate(0, 45*Time.deltaTime, 0);
+                Vector3 rot = transform.eulerAngles;
+                rot.x = 0f;
+                rot.z = 0f;
+                transform.eulerAngles = rot;
             }
             else
             {
