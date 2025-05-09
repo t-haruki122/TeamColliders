@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour
 {
-    // 発見UI用のビックリマークとはてなマーク
-    [SerializeField] private GameObject TMP_exclamation;
-    [SerializeField] private GameObject TMP_question;
+    // 発見UI用のビックリマークとはてなマークと沈黙マーク
+    private GameObject TMP_exclamation;
+    private GameObject TMP_question;
+    private GameObject TMP_quiet;
 
     // ゲームオブジェクト
     private GameObject _self;
     private GameObject _target;
+
+    // 値を共有するスクリプト
+    public EnemyShot enemyShot;
 
     // 敵のパラメータ
     [SerializeField] private float speed = 1.0f;
@@ -24,6 +28,7 @@ public class EnemyBehaviour : MonoBehaviour
     private bool isVisibleMemory = false;
     private int internalFrameCount = -1;
 
+    // ターゲットが円錐の中に入っているか調べる
     public bool isInAngle()
     {   
         // ターゲットまでの向きと距離を計算
@@ -41,6 +46,7 @@ public class EnemyBehaviour : MonoBehaviour
         return innerProduct > cosHalf && targetDistance < _maxDistance;
     }
 
+    // ターゲットとの間にオブジェクトがないか調べる
     public bool isNotObstructed()
     {
         // ターゲットまでの向きを計算
@@ -54,13 +60,26 @@ public class EnemyBehaviour : MonoBehaviour
         return false;
     }
 
+    void reset()
+    {
+        TMP_exclamation.SetActive(false);
+        TMP_question.SetActive(false);
+        TMP_quiet.SetActive(false);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         _self = this.gameObject;
         _target = GameObject.FindGameObjectWithTag("Player");
-        TMP_exclamation.SetActive(false);
-        TMP_question.SetActive(false);
+
+        enemyShot = GetComponentInChildren<EnemyShot>();
+
+        TMP_exclamation = transform.Find("UI/TMP_exclamation").gameObject;
+        TMP_question = transform.Find("UI/TMP_question").gameObject;
+        TMP_quiet = transform.Find("UI/TMP_quiet").gameObject;
+
+        reset();
     }
 
     // Update is called once per frame
@@ -70,24 +89,24 @@ public class EnemyBehaviour : MonoBehaviour
         var isVisible = isInAngle() && isNotObstructed();
         if (!isVisibleMemory && isVisible)
         {
-            Start();
             // ターゲットを発見
+            reset();
             internalFrameCount = 120;
             TMP_exclamation.SetActive(true);
         }
         if (isVisibleMemory && !isVisible)
         {
-            Start();
-            // ターゲットを見失った
+            // ターゲットが見えなくなった
+            reset();
             internalFrameCount = 120;
-            TMP_question.SetActive(true);
+            TMP_quiet.SetActive(true);
         }
         isVisibleMemory = isVisible;
         
         // 発見UIのフレームカウント
         if (internalFrameCount == 0)
         {
-            Start();
+            reset();
             internalFrameCount = -1;
         }
         if (internalFrameCount > 0)
@@ -100,8 +119,14 @@ public class EnemyBehaviour : MonoBehaviour
         {
             // プレイヤーメモリを更新
             playerPositionMemory = _target.transform.position;
+            // プレイヤメモリのy座標をデフォルト値に
+            playerPositionMemory.Set(playerPositionMemory.x, _self.transform.position.y, playerPositionMemory.z);
             // プレイヤーの位置に移動
             transform.position = Vector3.MoveTowards(transform.position, playerPositionMemory, speed * Time.deltaTime);
+            // プレイヤーの方を見る
+            transform.LookAt(_target.transform);
+            // EnemyShotを有効化
+            enemyShot.isActiveEnemyShot = true;
         }
         else // プレイヤーを視認していないとき
         {
@@ -113,12 +138,17 @@ public class EnemyBehaviour : MonoBehaviour
             {
                 // 記憶したプレイヤーの位置まで動く
                 transform.position = Vector3.MoveTowards(transform.position, playerPositionMemory, speed * Time.deltaTime);
-                // 動き終わったらメモリーを000
+                // 動き終わったらメモリーを000 -> 見失った
                 if (transform.position == playerPositionMemory)
                 {
                     playerPositionMemory = new Vector3(0, 0, 0);
+                    reset();
+                    internalFrameCount = 120;
+                    TMP_question.SetActive(true);
                 }
             }
+            // enemyshotを無効化
+            enemyShot.isActiveEnemyShot = false;
         }
 
         // 結果表示
