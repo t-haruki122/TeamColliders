@@ -18,6 +18,9 @@ public class EnemyBehaviour : MonoBehaviour
     private GameObject _self;
     private GameObject _target;
 
+    // 他のスクリプトと共有する値
+    public int damage;
+
     // 値を共有するスクリプト
     private EnemyShot enemyShot;
 
@@ -29,7 +32,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     // 内部記憶_敵の記憶
     private Vector3 playerPositionMemory = new Vector3(0, 0, 0);
-    public int HP; // TODO 後でprivateに！
+    public int HP; // TODO 後でprivateに!
 
     // 内部記憶_システム変数
     private bool isVisibleMemory = false;
@@ -98,6 +101,17 @@ public class EnemyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var isVisible = false;
+    
+        // HPの減算
+        if (damage > 0) {
+            HP -= damage;
+            damage = 0;
+
+            // プレイヤーを認知する
+            isVisible = true;
+        }
+
         // HPが0以下なら自身を破壊する
         // TODO 破壊アニメーション
         if (HP < 0) {
@@ -106,7 +120,7 @@ public class EnemyBehaviour : MonoBehaviour
         }
 
         // HPバーの更新
-        enemyHPBar.value = HP;
+        enemyHPBar.value = (float)HP / (float)maxHP;
 
         // 敵の色の更新
         // デフォルトカラー!!マテリアルの色変えたら変えること！！
@@ -115,7 +129,7 @@ public class EnemyBehaviour : MonoBehaviour
         {
             // HP(50%)以下で黄色 -> 赤色に変遷
             float _val = 0.5f - (float)HP / (float)maxHP;
-            Debug.Log(_val);
+            // Debug.Log(_val);
             color = new Color(1f, 1f - 2f * _val, 0.5f - _val);
         }
         transform.Find("Body").GetComponent<Renderer>().material.color = color;
@@ -124,7 +138,7 @@ public class EnemyBehaviour : MonoBehaviour
         transform.Find("Body/Halo").GetComponent<Renderer>().material.color = color;
 
         // プレイヤーが見えるか？
-        var isVisible = isInAngle() && isNotObstructed();
+        isVisible = isVisible? true: isInAngle() && isNotObstructed();
 
         // TODO 見えなくとも、プレイヤーに攻撃されたらisVisible = trueとする。
 
