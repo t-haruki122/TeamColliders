@@ -37,18 +37,19 @@ public class PlayerShot : MonoBehaviour
         if (frameCount == firingRate)
         {
             frameCount = 0;
-            transform.rotation = mainCamera.transform.rotation;
 
             Vector3 mainCameraDir = mainCamera.transform.rotation * Vector3.forward;
-            Quaternion rotation = transform.rotation;
-            // クロスヘアが指している対象がEnemyタグかどうか判定
+            Quaternion rotation = mainCamera.transform.rotation;
+            // クロスヘアと弾道のギャップを補正
             if (Physics.Raycast(mainCamera.transform.position, mainCameraDir, out RaycastHit hit))
             {
                 if (hit.collider.gameObject.CompareTag("Enemy")) {
                     Debug.Log("Player target: "+ hit.collider.gameObject.name);
-                    rotation = Quaternion.LookRotation(mainCamera.transform.position - hit.collider.transform.position);
+                    rotation = Quaternion.LookRotation(hit.collider.transform.position - transform.position);
                 }
             }
+
+            transform.rotation = rotation;
 
             // 弾を発射
             GameObject shell = Instantiate(shellPrefab, transform.position, rotation);
