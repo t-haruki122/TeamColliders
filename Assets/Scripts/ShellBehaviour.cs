@@ -22,6 +22,10 @@ public class ShellBehaviour : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("Player was shot");
+        if (!other.gameObject.CompareTag("Enemy"))
+        {
+            // 敵に当たったなら貫通
+            Destroy(this.gameObject);
         }
         Destroy(this.gameObject);
     }
