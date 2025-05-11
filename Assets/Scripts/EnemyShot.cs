@@ -9,6 +9,7 @@ public class EnemyShot : MonoBehaviour
     public bool isActiveEnemyShot = false;
     public int firingRate = 60;
     public int shellSpeed = 1000;
+    public float shellDestroyTime = 5.0f;
 
     private int frameCount = 0;
 
@@ -39,7 +40,7 @@ public class EnemyShot : MonoBehaviour
             // AudioSource.PlayClipAtPoint(sound, transform.position);
 
             // ５秒後に砲弾を破壊する
-            Destroy(shell, 5.0f);
+            Destroy(shell, shellDestroyTime);
         }
     }
 }
