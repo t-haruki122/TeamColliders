@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -12,17 +11,7 @@ public class GameManager : MonoBehaviour
     private int hit = 0;
     private const double hitCoefficient = 0.95;
     private int combo = 0;
-    private const int baseScore = 100;
-    
-
-    public int Hit {
-        get {return hit;}
-        set {hit = value;}
-    }
-    public int Combo{
-        get {return combo;}
-        set {combo = value;}
-    }
+    private const int weight = 100;
 
     void Awake() {
         if (Instance == null) {
@@ -43,5 +32,22 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    /*hit, comboインクリメンタ，scoreゲッタ*/
+    public void addHit() { ++hit; }
+    public void addCombo() {++combo; }
+    public int getScore() { return score; }
+
+    /*PP取得 内部メソッド*/
+    private double getPP() {
+        return Math.Pow(hitCoefficient, hit) * (1 + Math.Sqrt(combo / weight));
+    }
+
+    /*score加算*/
+    public void addScore(int baseScore) {
+        score += (int) (baseScore * getPP());
+    }
+
+
     
 }
