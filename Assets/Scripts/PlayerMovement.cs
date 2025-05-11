@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Application.targetFrameRate = 60; // TODO マージする前に消せ！！
         firstPos = transform.position;
     }
 
