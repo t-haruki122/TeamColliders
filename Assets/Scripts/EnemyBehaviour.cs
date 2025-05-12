@@ -29,6 +29,8 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] float _sightAngle = 30.0f;
     [SerializeField] float _maxDistance = 20.0f;
     [SerializeField] int maxHP = 100;
+    [SerializeField] bool isFriendly = false;
+    [SerializeField] bool isIdleRotation = false;
 
     // 内部記憶_敵の記憶
     private Vector3 playerPositionMemory = new Vector3(0, 0, 0);
@@ -86,6 +88,7 @@ public class EnemyBehaviour : MonoBehaviour
 
         Transform _enemyShot = transform.Find("EnemyShot");
         enemyShot = _enemyShot.GetComponent<EnemyShot>();
+        enemyShot.isActiveEnemyShot = false;
 
         enemyHPBar = transform.Find("StatusUI/Canvas/EnemyHPBar").GetComponent<Slider>();
 
@@ -137,10 +140,11 @@ public class EnemyBehaviour : MonoBehaviour
         transform.Find("Body/WingLeft").GetComponent<Renderer>().material.color = color;
         transform.Find("Body/Halo").GetComponent<Renderer>().material.color = color;
 
+        if (isFriendly) return;
+        /****フレンドリーだったらこれより下の敵対ビヘイビアは考えない****/
+
         // プレイヤーが見えるか？
         isVisible = isVisible? true: isInAngle() && isNotObstructed();
-
-        // TODO 見えなくとも、プレイヤーに攻撃されたらisVisible = trueとする。
 
         // 発見UIの更新
         if (!isVisibleMemory && isVisible)
@@ -190,11 +194,13 @@ public class EnemyBehaviour : MonoBehaviour
             {
                 // プレイヤーの位置がわからないので停止、一旦何もしない
                 // 回転させてみる？ -> 微妙だったらコメントアウト
-                transform.Rotate(0, 45*Time.deltaTime, 0);
-                Vector3 rot = transform.eulerAngles;
-                rot.x = 0f;
-                rot.z = 0f;
-                transform.eulerAngles = rot;
+                if (isIdleRotation) {
+                    transform.Rotate(0, 45*Time.deltaTime, 0);
+                    Vector3 rot = transform.eulerAngles;
+                    rot.x = 0f;
+                    rot.z = 0f;
+                    transform.eulerAngles = rot;
+                }
             }
             else
             {

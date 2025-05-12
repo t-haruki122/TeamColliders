@@ -11,6 +11,8 @@ public class PlayerShot : MonoBehaviour
     public int firingRate = 15;
     public int shellSpeed = 2000;
 
+    public bool ballisticGapCompensation = true;
+
     private int frameCount = 0;
 
     // メインカメラ
@@ -41,14 +43,15 @@ public class PlayerShot : MonoBehaviour
             Vector3 mainCameraDir = mainCamera.transform.rotation * Vector3.forward;
             Quaternion rotation = mainCamera.transform.rotation;
             // クロスヘアと弾道のギャップを補正
-            if (Physics.Raycast(mainCamera.transform.position, mainCameraDir, out RaycastHit hit))
-            {
-                if (hit.collider.gameObject.CompareTag("Enemy")) {
-                    Debug.Log("Player target: "+ hit.collider.gameObject.name);
-                    rotation = Quaternion.LookRotation(hit.collider.transform.position - transform.position);
+            if (ballisticGapCompensation) {
+                if (Physics.Raycast(mainCamera.transform.position, mainCameraDir, out RaycastHit hit))
+                {
+                    if (hit.collider.gameObject.CompareTag("Enemy")) {
+                        Debug.Log("Player target: "+ hit.collider.gameObject.name);
+                        rotation = Quaternion.LookRotation(hit.collider.transform.GetComponent<Renderer>().bounds.center - transform.position);
+                    }
                 }
             }
-
             transform.rotation = rotation;
 
             // 弾を発射
