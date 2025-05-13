@@ -33,8 +33,10 @@ public class PlayerAim : MonoBehaviour
         if (isAiming)
         {
             // エイム中はプレイヤーの向きとカメラの向きを合わせる
+            // Aim.animに合わせ，y軸+40度の角度をつける
             Vector3 rot = mainCamera.transform.eulerAngles;
             rot.x = 0f;
+            rot.y += 40f;
             rot.z = 0f;
             transform.eulerAngles = rot;
         }
