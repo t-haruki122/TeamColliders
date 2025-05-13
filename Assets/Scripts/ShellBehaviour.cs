@@ -22,7 +22,13 @@ public class ShellBehaviour : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("Player was shot");
+            PlayerParams playerParams = other.transform.parent.GetComponent<PlayerParams>();
+            playerParams.cntHit += 1;
         }
-        Destroy(this.gameObject);
+        if (!other.gameObject.CompareTag("Enemy"))
+        {
+            // 敵に当たったなら貫通
+            Destroy(this.gameObject);
+        }
     }
 }

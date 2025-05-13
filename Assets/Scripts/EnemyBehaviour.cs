@@ -18,6 +18,9 @@ public class EnemyBehaviour : MonoBehaviour
     private GameObject _self;
     private GameObject _target;
 
+    // 他のスクリプトと共有する値
+    public int damage;
+
     // 値を共有するスクリプト
     private EnemyShot enemyShot;
 
@@ -26,10 +29,12 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] float _sightAngle = 30.0f;
     [SerializeField] float _maxDistance = 20.0f;
     [SerializeField] int maxHP = 100;
+    [SerializeField] bool isFriendly = false;
+    [SerializeField] bool isIdleRotation = false;
 
     // 内部記憶_敵の記憶
     private Vector3 playerPositionMemory = new Vector3(0, 0, 0);
-    public int HP; // TODO 後でprivateに！
+    public int HP; // TODO 後でprivateに!
 
     // 内部記憶_システム変数
     private bool isVisibleMemory = false;
@@ -83,6 +88,7 @@ public class EnemyBehaviour : MonoBehaviour
 
         Transform _enemyShot = transform.Find("EnemyShot");
         enemyShot = _enemyShot.GetComponent<EnemyShot>();
+        enemyShot.isActiveEnemyShot = false;
 
         enemyHPBar = transform.Find("StatusUI/Canvas/EnemyHPBar").GetComponent<Slider>();
 
@@ -98,6 +104,17 @@ public class EnemyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var isVisible = false;
+    
+        // HPの減算
+        if (damage > 0) {
+            HP -= damage;
+            damage = 0;
+
+            // プレイヤーを認知する
+            isVisible = true;
+        }
+
         // HPが0以下なら自身を破壊する
         // TODO 破壊アニメーション
         if (HP < 0) {
@@ -106,7 +123,7 @@ public class EnemyBehaviour : MonoBehaviour
         }
 
         // HPバーの更新
-        enemyHPBar.value = HP;
+        enemyHPBar.value = (float)HP / (float)maxHP;
 
         // 敵の色の更新
         // デフォルトカラー!!マテリアルの色変えたら変えること！！
@@ -115,7 +132,7 @@ public class EnemyBehaviour : MonoBehaviour
         {
             // HP(50%)以下で黄色 -> 赤色に変遷
             float _val = 0.5f - (float)HP / (float)maxHP;
-            Debug.Log(_val);
+            // Debug.Log(_val);
             color = new Color(1f, 1f - 2f * _val, 0.5f - _val);
         }
         transform.Find("Body").GetComponent<Renderer>().material.color = color;
@@ -123,10 +140,11 @@ public class EnemyBehaviour : MonoBehaviour
         transform.Find("Body/WingLeft").GetComponent<Renderer>().material.color = color;
         transform.Find("Body/Halo").GetComponent<Renderer>().material.color = color;
 
-        // プレイヤーが見えるか？
-        var isVisible = isInAngle() && isNotObstructed();
+        if (isFriendly) return;
+        /****フレンドリーだったらこれより下の敵対ビヘイビアは考えない****/
 
-        // TODO 見えなくとも、プレイヤーに攻撃されたらisVisible = trueとする。
+        // プレイヤーが見えるか？
+        isVisible = isVisible? true: isInAngle() && isNotObstructed();
 
         // 発見UIの更新
         if (!isVisibleMemory && isVisible)
@@ -176,11 +194,13 @@ public class EnemyBehaviour : MonoBehaviour
             {
                 // プレイヤーの位置がわからないので停止、一旦何もしない
                 // 回転させてみる？ -> 微妙だったらコメントアウト
-                transform.Rotate(0, 45*Time.deltaTime, 0);
-                Vector3 rot = transform.eulerAngles;
-                rot.x = 0f;
-                rot.z = 0f;
-                transform.eulerAngles = rot;
+                if (isIdleRotation) {
+                    transform.RotateAround(transform.Find("Center").position, new Vector3(0f, 1f, 0f), Time.deltaTime * 45f);
+                    Vector3 rot = transform.eulerAngles;
+                    rot.x = 0f;
+                    rot.z = 0f;
+                    transform.eulerAngles = rot;
+                }
             }
             else
             {
