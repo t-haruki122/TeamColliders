@@ -11,6 +11,13 @@ public class PlayerAim : MonoBehaviour
     public GameObject mainCamera;
     public GameObject crossHair;
 
+    private bool isAiming = false;
+
+    // 他のスクリプトとisAimingを共有するためのメソッド
+    public bool getIsAiming() {
+        return isAiming;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +27,8 @@ public class PlayerAim : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool isAiming = Input.GetMouseButton(1); // 右クリック
+        isAiming = Input.GetMouseButton(1); // 右クリック
+
         // Debug.Log(isAiming);
         animator.SetBool("isAiming", isAiming);
 
