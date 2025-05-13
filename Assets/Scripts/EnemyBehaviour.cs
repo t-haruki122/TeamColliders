@@ -195,7 +195,7 @@ public class EnemyBehaviour : MonoBehaviour
                 // プレイヤーの位置がわからないので停止、一旦何もしない
                 // 回転させてみる？ -> 微妙だったらコメントアウト
                 if (isIdleRotation) {
-                    transform.Rotate(0, 45*Time.deltaTime, 0);
+                    transform.RotateAround(transform.Find("Center").position, new Vector3(0f, 1f, 0f), Time.deltaTime * 45f);
                     Vector3 rot = transform.eulerAngles;
                     rot.x = 0f;
                     rot.z = 0f;
