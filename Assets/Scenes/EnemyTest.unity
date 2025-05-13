@@ -14259,6 +14259,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &898137577 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7185609520491829590, guid: 291006768a7ba1f4c9874a6d7017a31b, type: 3}
+  m_PrefabInstance: {fileID: 1865620368}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &929583483
 GameObject:
   m_ObjectHideFlags: 0
@@ -14884,8 +14889,8 @@ MonoBehaviour:
   _sightAngle: 30
   _maxDistance: 20
   maxHP: 100
-  isFriendly: 1
-  isIdleRotation: 0
+  isFriendly: 0
+  isIdleRotation: 1
   HP: 100
 --- !u!1 &1244035570
 GameObject:
@@ -15138,6 +15143,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
+    - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
+      propertyPath: playerAim
+      value: 
+      objectReference: {fileID: 1310515238}
     - target: {fileID: 6982812146204527121, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       propertyPath: m_WarningMessage
       value: "\nBinding warning: Some generic clip(s) animate transforms that are
@@ -15673,7 +15682,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cntHit: 0
+  hasWeapon: 0
   cntHitText: {fileID: 479107769}
+  weapon: {fileID: 898137577}
 --- !u!1 &1342513379
 GameObject:
   m_ObjectHideFlags: 0
