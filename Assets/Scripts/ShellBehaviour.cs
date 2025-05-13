@@ -30,6 +30,5 @@ public class ShellBehaviour : MonoBehaviour
             // 敵に当たったなら貫通
             Destroy(this.gameObject);
         }
-        Destroy(this.gameObject);
     }
 }
