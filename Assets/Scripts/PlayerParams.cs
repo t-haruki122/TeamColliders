@@ -8,18 +8,28 @@ public class PlayerParams : MonoBehaviour
 {
     public int cntHit;
 
-    // ゲームオブジェクト
+    public bool hasWeapon = false;
+
+    // ゲームオブジェクト(Serialize)
     public TextMeshProUGUI cntHitText;
+    public GameObject weapon;
 
     // Start is called before the first frame update
     void Start()
     {
         cntHit = 0;
+
+        /* 武器を最初から持たせる（テスト用） */
+        hasWeapon = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        cntHitText.SetText("CntHit:" + cntHit);
+        // CntHitを画面表示
+        cntHitText.SetText("CntHit: " + cntHit);
+
+        // weaponの表示・非表示
+        weapon.SetActive(hasWeapon);
     }
 }

@@ -18,9 +18,13 @@ public class PlayerShot : MonoBehaviour
     // メインカメラ
     public GameObject mainCamera;
 
+    // プレイヤーパラメーター用スクリプト
+    private PlayerParams playerParams;
+
     void Start()
     {
-        
+        // プレイヤーパラメータースクリプトを取得
+        playerParams = transform.parent.GetComponent<PlayerParams>();
     }
 
     void Update()
@@ -29,6 +33,12 @@ public class PlayerShot : MonoBehaviour
         isActivePlayerShot = isFire;
 
         if (!isActivePlayerShot)
+        {
+            frameCount = firingRate - 1;
+            return;
+        }
+
+        if (!playerParams.hasWeapon)
         {
             frameCount = firingRate - 1;
             return;
