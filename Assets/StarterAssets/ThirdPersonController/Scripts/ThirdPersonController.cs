@@ -98,11 +98,6 @@ namespace StarterAssets
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
-        // フィールドに追加
-        private int _jumpCount = 0;
-        [SerializeField] private int _maxJumpCount = 2;
-
-
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
 #endif
@@ -288,26 +283,36 @@ namespace StarterAssets
         {
             if (Grounded)
             {
+                // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
 
+                // update animator if using character
                 if (_hasAnimator)
                 {
                     _animator.SetBool(_animIDJump, false);
                     _animator.SetBool(_animIDFreeFall, false);
                 }
 
+                // stop our velocity dropping infinitely when grounded
                 if (_verticalVelocity < 0.0f)
                 {
                     _verticalVelocity = -2f;
                 }
 
-                _jumpCount = 0;
-
+                // Jump
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
-                    Jump();
+                    // the square root of H * -2 * G = how much velocity needed to reach desired height
+                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+
+                    // update animator if using character
+                    if (_hasAnimator)
+                    {
+                        _animator.SetBool(_animIDJump, true);
+                    }
                 }
 
+                // jump timeout
                 if (_jumpTimeoutDelta >= 0.0f)
                 {
                     _jumpTimeoutDelta -= Time.deltaTime;
@@ -315,50 +320,33 @@ namespace StarterAssets
             }
             else
             {
+                // reset the jump timeout timer
                 _jumpTimeoutDelta = JumpTimeout;
 
+                // fall timeout
                 if (_fallTimeoutDelta >= 0.0f)
                 {
                     _fallTimeoutDelta -= Time.deltaTime;
                 }
                 else
                 {
+                    // update animator if using character
                     if (_hasAnimator)
                     {
                         _animator.SetBool(_animIDFreeFall, true);
                     }
                 }
 
-                // ★ 空中でもジャンプ可能
-                if (_input.jump && _jumpCount < _maxJumpCount)
-                {
-                    Jump();
-                }
+                // if we are not grounded, do not jump
+                _input.jump = false;
             }
 
+            // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
             if (_verticalVelocity < _terminalVelocity)
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
-
-            // 入力リセット（毎フレーム）
-            _input.jump = false;
         }
-
-        // ジャンプ処理を関数化して共通利用
-        private void Jump()
-        {
-            _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-
-            if (_hasAnimator)
-            {
-                _animator.SetBool(_animIDJump, true);
-            }
-
-            _jumpCount++;
-        }
-
-
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
