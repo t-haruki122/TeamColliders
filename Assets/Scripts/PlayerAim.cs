@@ -31,7 +31,7 @@ public class PlayerAim : MonoBehaviour
         isAiming = Input.GetMouseButton(1); // 右クリック
 
         // 武器を持っていなかったらADSできなくする
-        isAiming = GameManager.GMInstance.hasWeapon? isAiming: false;
+        isAiming = GameManager.GMInstance.getHasWeapon()? isAiming: false;
 
         // Debug.Log(isAiming);
         animator.SetBool("isAiming", isAiming);

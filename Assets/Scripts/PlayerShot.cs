@@ -35,7 +35,7 @@ public class PlayerShot : MonoBehaviour
             return;
         }
 
-        if (!GameManager.GMInstance.hasWeapon)
+        if (!GameManager.GMInstance.getHasWeapon())
         {
             frameCount = firingRate - 1;
             return;
