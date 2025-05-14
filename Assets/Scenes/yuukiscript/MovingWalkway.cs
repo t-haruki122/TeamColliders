@@ -13,6 +13,7 @@ public class MovingWalkway : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("OnTriggerEnter 発火: " + other.gameObject.name);
         if (other.CompareTag("Player"))
         {
             playerOn = true;
