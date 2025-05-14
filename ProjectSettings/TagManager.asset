@@ -6,8 +6,6 @@ TagManager:
   tags:
   - CinemachineTarget
   - warpCube
-  - Weapon
-  - Enemy
   layers:
   - Default
   - TransparentFX
