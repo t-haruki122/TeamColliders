@@ -36,11 +36,11 @@ public class ItemManager : GameManager
     }
     
     /*<-+-*-~-=-=-~-*-+-method-+-*-~-=-=-~-*-+->*/
-    public void recoverPPS() { addPP(recoverPPs); }
-    public void recoverPPM() { addPP(recoverPPm); }
-    public void recoverPPL() { addPP(recoverPPl); }
+    public void recoverPPS() { GameManager.GMInstance.addPP(recoverPPs); }
+    public void recoverPPM() { GameManager.GMInstance.addPP(recoverPPm); }
+    public void recoverPPL() { GameManager.GMInstance.addPP(recoverPPl); }
 
-    public void recoverAmmoS() { addAmmo(recoverAmmos); }
-    public void recoverAmmoM() { addAmmo(recoverAmmom); }
-    public void recoverAmmoL() { addAmmo(recoverAmmol); }
+    public void recoverAmmoS() { GameManager.GMInstance.addAmmo(recoverAmmos); }
+    public void recoverAmmoM() { GameManager.GMInstance.addAmmo(recoverAmmom); }
+    public void recoverAmmoL() { GameManager.GMInstance.addAmmo(recoverAmmol); }
 }
