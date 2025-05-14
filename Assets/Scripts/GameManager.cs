@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     private int baseDamage = 100;
     private int remainingAmmo = 100;
     private double damageLevel = 1.0;
+    private bool hasWeapon = false;
 
     /*<-+-*-~-=-=-~-*-+-eventMethod-+-*-~-=-=-~-*-+->*/
     void Awake() {
@@ -92,4 +93,5 @@ public class GameManager : MonoBehaviour
         damageLevel *= damageCoefficient;
     }
     public int getDamage() { return (int) (damageLevel * baseDamage); }
+    // public bool 
 }

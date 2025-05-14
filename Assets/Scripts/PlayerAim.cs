@@ -11,8 +11,6 @@ public class PlayerAim : MonoBehaviour
     public GameObject mainCamera;
     public GameObject crossHair;
 
-    // プレイヤーパラメーター用スクリプト
-    private PlayerParams playerParams;
 
     private bool isAiming = false;
 
@@ -25,9 +23,6 @@ public class PlayerAim : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-
-        // プレイヤーパラメータースクリプトを取得
-        playerParams = GetComponent<PlayerParams>();
     }
 
     // Update is called once per frame
@@ -36,7 +31,7 @@ public class PlayerAim : MonoBehaviour
         isAiming = Input.GetMouseButton(1); // 右クリック
 
         // 武器を持っていなかったらADSできなくする
-        isAiming = playerParams.hasWeapon? isAiming: false;
+        isAiming = GameManager.GMInstance.hasWeapon? isAiming: false;
 
         // Debug.Log(isAiming);
         animator.SetBool("isAiming", isAiming);
