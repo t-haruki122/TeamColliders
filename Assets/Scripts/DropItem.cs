@@ -26,12 +26,12 @@ public class DropItem : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
+        Debug.Log("Player got item that has itemID: " + itemID);
         if (other.gameObject.CompareTag("Player")) {
             switch (itemID) {
-                case 0: Debug.Log("Error itemID not set for this object"); break;
-                case 1: GameManager.GMInstance.setHasWeapon(true); transform.parent.gameObject.SetActive(false); break;
-                default: Debug.Log("item ID not found"); break;
+                case 0: Debug.Log("Error itemID not set for this object"); gameObject.SetActive(false); break;
+                case 1: GameManager.GMInstance.setHasWeapon(true); gameObject.SetActive(false); break;
+                default: Debug.Log("item ID not found"); gameObject.SetActive(false); break;
             }
         }
     }
