@@ -17,7 +17,7 @@ public abstract class baseEnemy : MonoBehaviour
     protected bool isIdleRotation = false;
     protected int HP;
     protected int attackDamage = 1; //hitcount per hit 
-    protected int droppedAmmo = 10; 
+    protected Item item; //落とす弾のインスタンス
     
     /*<-+-*-~-=-=-~-*-+-method-+-*-~-=-=-~-*-+->*/
     /*ターゲットが円錐の中に入っているか*/
@@ -53,5 +53,7 @@ public abstract class baseEnemy : MonoBehaviour
         return false;
     }
     /*倒された際弾を回復*/
-    public void lootAmmo() { GameManager.GMInstance.addAmmo(droppedAmmo); }
+    public void lootAmmo() { 
+        if(item != null) GameManager.GMInstance.addAmmo(item); 
+    }
 }
