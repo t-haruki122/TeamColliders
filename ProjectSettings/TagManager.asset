@@ -8,6 +8,7 @@ TagManager:
   - warpCube
   - Weapon
   - Enemy
+  - Dropping
   layers:
   - Default
   - TransparentFX

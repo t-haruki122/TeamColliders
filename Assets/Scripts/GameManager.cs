@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
     private int baseDamage = 100;
     private int remainingAmmo = 100;
     private double damageLevel = 1.0;
+    private bool hasWeapon = false;
+
+    private GameObject Player;
+    private GameObject Weapon;
 
     /*<-+-*-~-=-=-~-*-+-eventMethod-+-*-~-=-=-~-*-+->*/
     void Awake() {
@@ -38,6 +42,12 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
         preHit = hit;
         preCombo = combo;
+
+        // プレイヤーのゲームオブジェクトを取得
+        Player = GameObject.FindWithTag("Player");
+        // 武器のゲームオブジェクトを取得
+        Weapon = Player.transform.parent.Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion").gameObject;
+        setHasWeapon(false);
     }
 
     // Update is called once per frame
@@ -92,4 +102,11 @@ public class GameManager : MonoBehaviour
         damageLevel *= damageCoefficient;
     }
     public int getDamage() { return (int) (damageLevel * baseDamage); }
+    public bool getHasWeapon() {
+        return this.hasWeapon;
+    }
+    public void setHasWeapon(bool hasWeapon) {
+        this.hasWeapon = hasWeapon;
+        Weapon.SetActive(hasWeapon);
+    }
 }
