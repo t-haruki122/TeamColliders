@@ -80,13 +80,11 @@ public class GameManager : MonoBehaviour
     }
     
     /*pp recover*/
-    protected void addPP(double variable) {
-        pp += variable;
-    }
+    public void addPP(Item item) { pp += item.getItem(); }
 
     /*銃関連*/ 
     public void reduceAmmo() { --remainingAmmo; }
-    protected void addAmmo(int num) { remainingAmmo += num; }
+    public void addAmmo(Item item) { remainingAmmo += (int)item.getItem(); }
 
     private void setDamageLevel() {
         damageLevel *= damageCoefficient;
