@@ -5,19 +5,21 @@ using UnityEngine;
 public class DropItem : MonoBehaviour
 {
     [SerializeField] protected GameObject itemPrefab;
+    [SerializeField] protected int itemProperty = 0;
     private Item self;
 
     // Start is called before the first frame update
     void Start()
     {
         if (!(itemPrefab == null)) {
-            if      (itemPrefab.name == "Scorpion")   self = new scorpion();
-            else if (itemPrefab.name == "RecoverPPS") self = new recoverPPs();
-            else if (itemPrefab.name == "RecoverPPM") self = new recoverPPm();
-            else if (itemPrefab.name == "RecoverPPL") self = new recoverPPl();
+            if      (itemPrefab.name == "Scorpion")     self = new scorpion();
+            else if (itemPrefab.name == "RecoverPPS")   self = new recoverPPs();
+            else if (itemPrefab.name == "RecoverPPM")   self = new recoverPPm();
+            else if (itemPrefab.name == "RecoverPPL")   self = new recoverPPl();
             else if (itemPrefab.name == "RecoverAmmoS") self = new recoverAmmos();
             else if (itemPrefab.name == "RecoverAmmoM") self = new recoverAmmom();
             else if (itemPrefab.name == "RecoverAmmoL") self = new recoverAmmol();
+            else if (itemPrefab.name == "Key")          self = new Key(itemProperty);
             else {
                 Debug.Log(gameObject.name + ": Invalid itemPrefab: " + itemPrefab.name);
                 return;
@@ -49,6 +51,10 @@ public class DropItem : MonoBehaviour
             }
             else if (self is RecoverAmmo) {
                 GameManager.GMInstance.addAmmo((RecoverAmmo)self);
+                Destroy(this.gameObject);
+            }
+            else if (self is Key) {
+                Debug.Log("Player got key: " + ((Key)self).getItem());
                 Destroy(this.gameObject);
             }
             else Debug.Log(this.gameObject.name + ": Item not set or unknown");
