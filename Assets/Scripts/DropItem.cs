@@ -4,18 +4,29 @@ using UnityEngine;
 
 public class DropItem : MonoBehaviour
 {
-    [SerializeField] private int itemID = 0;
-    /*
-    itemIDについて
-    0: エラー
-    1: 銃
-    2: 
-    */
+    [SerializeField] protected GameObject itemPrefab;
+    private Item self;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (!(itemPrefab == null)) {
+            if      (itemPrefab.name == "Scorpion")   self = new scorpion();
+            else if (itemPrefab.name == "RecoverPPS") self = new recoverPPs();
+            else if (itemPrefab.name == "RecoverPPM") self = new recoverPPm();
+            else if (itemPrefab.name == "RecoverPPL") self = new recoverPPl();
+            else if (itemPrefab.name == "RecoverAmmoS") self = new recoverAmmos();
+            else if (itemPrefab.name == "RecoverAmmoM") self = new recoverAmmom();
+            else if (itemPrefab.name == "RecoverAmmoL") self = new recoverAmmol();
+            else {
+                Debug.Log(gameObject.name + ": Invalid itemPrefab: " + itemPrefab.name);
+                return;
+            }
+            Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
+        }
+        else {
+            Debug.Log(gameObject.name + ": ItemPrefab not set to this object");
+        }
     }
 
     // Update is called once per frame
@@ -26,13 +37,21 @@ public class DropItem : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Player got item that has itemID: " + itemID);
         if (other.gameObject.CompareTag("Player")) {
-            switch (itemID) {
-                case 0: Debug.Log("Error itemID not set for this object"); gameObject.SetActive(false); break;
-                case 1: GameManager.GMInstance.setHasWeapon(true); gameObject.SetActive(false); break;
-                default: Debug.Log("item ID not found"); gameObject.SetActive(false); break;
+            /* オブジェクトのクラスを比較して適切な処理をする */
+            if (self is Weapon) {
+                GameManager.GMInstance.setWeapon((Weapon)self);
+                Destroy(this.gameObject);
             }
+            else if (self is RecoverPP) {
+                GameManager.GMInstance.addPP((RecoverPP)self);
+                Destroy(this.gameObject);
+            }
+            else if (self is RecoverAmmo) {
+                GameManager.GMInstance.addAmmo((RecoverAmmo)self);
+                Destroy(this.gameObject);
+            }
+            else Debug.Log(this.gameObject.name + ": Item not set or unknown");
         }
     }
 }
