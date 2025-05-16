@@ -66,6 +66,15 @@ public class GameManager : MonoBehaviour
             damageLevel = 1 + (damageLevel - 1) / 2; //comboが途切れると増加したダメージが半分になる
             preHit = hit;   
         }
+
+        /* 射撃をしているか(左クリック) */
+        // 左クリックを取得(武器を持っていなかったら射撃できなくする)
+        isFiring = getHasWeapon()? Input.GetMouseButton(0): false;
+
+        /* ADSをしているか(右クリック) */
+        // 右クリックを取得(武器を持っていなかったらADSできなくする)
+        isAiming = getHasWeapon()? Input.GetMouseButton(1): false;
+
     }
 
     /*<-+-*-~-=-=-~-*-+-method-+-*-~-=-=-~-*-+->*/
@@ -107,4 +116,6 @@ public class GameManager : MonoBehaviour
         this.hasWeapon = hasWeapon;
         Weapon.SetActive(hasWeapon);
     }
+    public bool getIsFiring() { return this.isFiring; }
+    public bool getIsAiming() { return this.isAiming; }
 }
