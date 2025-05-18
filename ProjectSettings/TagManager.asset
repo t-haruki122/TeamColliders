@@ -8,6 +8,10 @@ TagManager:
   - warpCube
   - Weapon
   - Enemy
+  - Blue_s3
+  - Bluebutton
+  - Redbutton
+  - Yellowbutton
   - Dropping
   layers:
   - Default

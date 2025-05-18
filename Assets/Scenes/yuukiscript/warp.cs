@@ -16,12 +16,24 @@ public class warp : MonoBehaviour
         
     }
 
-    void OnTriggerEnter(Collider other)
+    public Vector3 warpLocation = new Vector3(-90, 1, -90);
+
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("OnTriggerEnter 発火: " + other.gameObject.name);
-        if (other.gameObject.CompareTag("warpCube"))
+        Debug.Log("触れたオブジェクト: " + other.name);
+
+        if (other.CompareTag("Player"))
         {
-            transform.position = new Vector3(-90, 1, -90);
+            CharacterController cc = other.GetComponent<CharacterController>();
+            if (cc != null)
+            {
+                cc.enabled = false; // 一時的に無効化
+                other.transform.position = warpLocation;
+                cc.enabled = true;  // 再び有効化
+                Debug.Log("ワープさせた！");
+            }
         }
     }
+
+
 }
