@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class ShellBehaviour : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -22,13 +23,12 @@ public class ShellBehaviour : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("Player was shot");
-            PlayerParams playerParams = other.transform.parent.GetComponent<PlayerParams>();
-            playerParams.cntHit += 1;
+            GameManager.GMInstance.addHit();
         }
-        if (!other.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("Enemy"))
         {
-            // 敵に当たったなら貫通
-            Destroy(this.gameObject);
+            return;
         }
+        Destroy(this.gameObject);
     }
 }

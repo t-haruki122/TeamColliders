@@ -12,6 +12,7 @@ TagManager:
   - Bluebutton
   - Redbutton
   - Yellowbutton
+  - Dropping
   layers:
   - Default
   - TransparentFX
