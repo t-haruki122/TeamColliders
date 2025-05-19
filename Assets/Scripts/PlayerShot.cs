@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerShot : MonoBehaviour
 {
     public GameObject shellPrefab;
+    private Animator animator;
 
     // public AudioClip sound; // TODO
     public bool isActivePlayerShot = true;
@@ -21,12 +22,14 @@ public class PlayerShot : MonoBehaviour
 
     void Start()
     {
-
+        animator = transform.parent.GetComponent<Animator>();
     }
 
     void Update()
     {
         bool isFiring = GameManager.GMInstance.getIsFiring();
+        animator.SetBool("isFiring", isFiring);
+
         if (!isFiring) return;
 
         frameCount += 1;
@@ -59,8 +62,8 @@ public class PlayerShot : MonoBehaviour
             // 発射音を出す TODO
             // AudioSource.PlayClipAtPoint(sound, transform.position);
 
-            // ５秒後に砲弾を破壊する
-            Destroy(shell, 5.0f);
+            // 3秒後に砲弾を破壊する
+            Destroy(shell, 3.0f);
         }
     }
 }

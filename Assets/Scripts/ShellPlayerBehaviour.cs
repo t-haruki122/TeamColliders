@@ -21,7 +21,7 @@ public class ShellPlayerBehaviour : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log(other.gameObject.name + " was shot by player");
+            // Debug.Log(other.gameObject.name + " was shot by player");
             EnemyBehaviour enemyBehaviour;
             if (other.gameObject.name == "Body") {
                 enemyBehaviour = other.transform.parent.GetComponent<EnemyBehaviour>();

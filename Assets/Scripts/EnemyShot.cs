@@ -31,6 +31,7 @@ public class EnemyShot : MonoBehaviour
         {
             frameCount = 0;
             GameObject shell = Instantiate(shellPrefab, transform.position, transform.rotation);
+            shell.GetComponent<ShellBehaviour>().shellShooter = transform.parent.gameObject.name; // 弾に敵の名前を付与
             Rigidbody shellRb = shell.GetComponent<Rigidbody>();
 
             // 弾速は自由に設定
