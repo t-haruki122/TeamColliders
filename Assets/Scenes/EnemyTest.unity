@@ -13574,6 +13574,67 @@ MonoBehaviour:
   firingRate: 60
   shellSpeed: 1000
   shellDestroyTime: 5
+--- !u!1001 &395118207
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8260945915404942675, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_Name
+      value: DropItem (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942677, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: itemPrefab
+      value: 
+      objectReference: {fileID: 3852813167263553596, guid: 63a194a135eeaee42b1f039b41d89c06, type: 3}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_RootOrder
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 13.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 83d48d45c74e144619e898986347d5db, type: 3}
 --- !u!1 &400221117
 GameObject:
   m_ObjectHideFlags: 0
@@ -15027,10 +15088,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: infoPanel
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 3c51aee3a1dcf4e83ad52d0a01fd1ad8, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 3c51aee3a1dcf4e83ad52d0a01fd1ad8, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 75420dbc487f22b4f9d74d75077dd0c1, type: 2}
+  m_sharedMaterial: {fileID: -6387056414115774451, guid: 75420dbc487f22b4f9d74d75077dd0c1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -15060,7 +15121,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 4
+  m_fontStyle: 0
   m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -28804,7 +28865,7 @@ GameObject:
   - component: {fileID: 1698366599}
   - component: {fileID: 1698366603}
   m_Layer: 2
-  m_Name: Capsule
+  m_Name: PlayerCollider
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30410,8 +30471,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shellPrefab: {fileID: 454038548732343995, guid: d1b6c38209009024495f58ad9025cd7d, type: 3}
   isActivePlayerShot: 1
-  firingRate: 15
-  shellSpeed: 2000
+  firingRate: 7
+  shellSpeed: 1500
   ballisticGapCompensation: 1
   mainCamera: {fileID: 282400752}
 --- !u!1 &2031074003
