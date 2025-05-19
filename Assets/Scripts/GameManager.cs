@@ -48,8 +48,21 @@ public class GameManager : MonoBehaviour
 
         // プレイヤーのゲームオブジェクトを取得
         Player = GameObject.FindWithTag("Player");
-        // 武器のゲームオブジェクトを取得
-        Scorpion = Player.transform.parent.Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion").gameObject;
+        if (Player == null){
+            Debug.Log("Warning: Player object not set in GM! plz confirm player has its tag");
+        }
+        else {
+            if (Player.transform.parent == null) {
+                Debug.Log("Warning: Player parent is null!");
+            }
+            else {
+                // 武器のゲームオブジェクトを取得
+                Scorpion = Player.transform.parent
+                    .Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion")
+                    .gameObject;
+            }
+        }
+
         /* プレイヤーを素手に設定 */
         setWeapon(new unarmed());
     }
@@ -122,8 +135,14 @@ public class GameManager : MonoBehaviour
         this.updateWeapon();
     }
     private void updateWeapon() {
-        if (weapon is unarmed) Scorpion.SetActive(false);
-        else if (weapon is scorpion) Scorpion.SetActive(true);
+        if (weapon is unarmed) {
+            if (Scorpion == null) Debug.Log("Warning: Scorpion object not set in GM!");
+            else Scorpion.SetActive(false);
+        }
+        else if (weapon is scorpion) {
+            if (Scorpion == null) Debug.Log("Warning: Scorpion object not set in GM!");
+            else Scorpion.SetActive(true);
+        }
         else Debug.Log("Cannot update weapon: Unknown weapon ID: " + this.weapon);
     }
     public bool getIsFiring() { return this.isFiring; }
