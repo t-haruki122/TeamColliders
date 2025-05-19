@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerAim : MonoBehaviour
 {
-    Animator animator;
+    private Animator animator;
 
     // カメラのゲームオブジェクト
     public GameObject playerFollowCamera;
