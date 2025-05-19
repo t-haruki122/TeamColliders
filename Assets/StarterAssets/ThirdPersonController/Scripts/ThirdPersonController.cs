@@ -221,9 +221,9 @@ namespace StarterAssets
         private void Move()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            bool isAiming = false;
-            if (playerAim) isAiming = playerAim.getIsAiming();
-            float targetSpeed = _input.sprint && !isAiming ? SprintSpeed : MoveSpeed;
+            var isAiming = GameManager.GMInstance.getIsAiming();
+            var isFiring = GameManager.GMInstance.getIsFiring();
+            float targetSpeed = _input.sprint && !isAiming && !isFiring ? SprintSpeed : MoveSpeed;
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 

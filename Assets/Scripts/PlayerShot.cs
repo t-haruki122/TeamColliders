@@ -26,20 +26,8 @@ public class PlayerShot : MonoBehaviour
 
     void Update()
     {
-        bool isFire = Input.GetMouseButton(0); // 左クリック
-        isActivePlayerShot = isFire;
-
-        if (!isActivePlayerShot)
-        {
-            frameCount = firingRate - 1;
-            return;
-        }
-
-        if (!GameManager.GMInstance.getHasWeapon())
-        {
-            frameCount = firingRate - 1;
-            return;
-        }
+        bool isFiring = GameManager.GMInstance.getIsFiring();
+        if (!isFiring) return;
 
         frameCount += 1;
 

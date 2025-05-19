@@ -22,10 +22,16 @@ public class GameManager : MonoBehaviour
     private int baseDamage = 100;
     private int remainingAmmo = 100;
     private double damageLevel = 1.0;
-    private bool hasWeapon = false;
+    private Weapon weapon;
 
     private GameObject Player;
-    private GameObject Weapon;
+    private GameObject Scorpion;
+
+    private bool isFiring = false;
+    private bool isAiming = false;
+
+    /*敵関連*/
+    private bool isAct = true;
 
     /*<-+-*-~-=-=-~-*-+-eventMethod-+-*-~-=-=-~-*-+->*/
     void Awake() {
@@ -45,9 +51,23 @@ public class GameManager : MonoBehaviour
 
         // プレイヤーのゲームオブジェクトを取得
         Player = GameObject.FindWithTag("Player");
-        // 武器のゲームオブジェクトを取得
-        Weapon = Player.transform.parent.Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion").gameObject;
-        setHasWeapon(false);
+        if (Player == null){
+            Debug.Log("Warning: Player object not set in GM! plz confirm player has its tag");
+        }
+        else {
+            if (Player.transform.parent == null) {
+                Debug.Log("Warning: Player parent is null!");
+            }
+            else {
+                // 武器のゲームオブジェクトを取得
+                Scorpion = Player.transform.parent
+                    .Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion")
+                    .gameObject;
+            }
+        }
+
+        /* プレイヤーを素手に設定 */
+        setWeapon(new unarmed());
     }
 
     // Update is called once per frame
@@ -66,6 +86,15 @@ public class GameManager : MonoBehaviour
             damageLevel = 1 + (damageLevel - 1) / 2; //comboが途切れると増加したダメージが半分になる
             preHit = hit;   
         }
+
+        /* 射撃をしているか(左クリック) */
+        // 左クリックを取得(武器を持っていなかったら射撃できなくする)
+        isFiring = getHasWeapon()? Input.GetMouseButton(0): false;
+
+        /* ADSをしているか(右クリック) */
+        // 右クリックを取得(武器を持っていなかったらADSできなくする)
+        isAiming = getHasWeapon()? Input.GetMouseButton(1): false;
+
     }
 
     /*<-+-*-~-=-=-~-*-+-method-+-*-~-=-=-~-*-+->*/
@@ -90,21 +119,39 @@ public class GameManager : MonoBehaviour
     }
     
     /*pp recover*/
-    public void addPP(Item item) { pp += item.getItem(); }
+    public void addPP(RecoverPP item) { pp += item.getItem(); }
 
-    /*銃関連*/ 
+    /*弾関連*/ 
     public void reduceAmmo() { --remainingAmmo; }
-    public void addAmmo(Item item) { remainingAmmo += (int)item.getItem(); }
+    public void addAmmo(RecoverAmmo item) { remainingAmmo += (int)item.getItem(); }
 
+    /*戦闘システム関連*/
     private void setDamageLevel() {
         damageLevel *= damageCoefficient;
     }
     public int getDamage() { return (int) (damageLevel * baseDamage); }
-    public bool getHasWeapon() {
-        return this.hasWeapon;
+    public bool getIsAct() { return isAct; }
+    public void setIsAct(bool isAct) {
+        this.isAct = isAct;
     }
-    public void setHasWeapon(bool hasWeapon) {
-        this.hasWeapon = hasWeapon;
-        Weapon.SetActive(hasWeapon);
+
+    /*武器関連*/
+    public bool getHasWeapon() { return (int)weapon.getItem() >= 1; }
+    public void setWeapon(Weapon w) {
+        this.weapon = w;
+        this.updateWeapon();
     }
+    private void updateWeapon() {
+        if (weapon is unarmed) {
+            if (Scorpion == null) Debug.Log("Warning: Scorpion object not set in GM!");
+            else Scorpion.SetActive(false);
+        }
+        else if (weapon is scorpion) {
+            if (Scorpion == null) Debug.Log("Warning: Scorpion object not set in GM!");
+            else Scorpion.SetActive(true);
+        }
+        else Debug.Log("Cannot update weapon: Unknown weapon ID: " + this.weapon);
+    }
+    public bool getIsFiring() { return this.isFiring; }
+    public bool getIsAiming() { return this.isAiming; }
 }
