@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     /*敵関連*/
     private bool isAct = true;
 
+    /*inventorySystem*/
+    private InventoryManager inventory;
+
     /*<-+-*-~-=-=-~-*-+-eventMethod-+-*-~-=-=-~-*-+->*/
     void Awake() {
         if (GMInstance == null) {
@@ -45,6 +48,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        inventory = new InventoryManager();
         Application.targetFrameRate = 60;
         preHit = hit;
         preCombo = combo;
@@ -120,10 +124,15 @@ public class GameManager : MonoBehaviour
     
     /*pp recover*/
     public void addPP(RecoverPP item) { pp += item.getItem(); }
+    public void resetHit() {
+        if (hit > 5) hit -= 5;
+        else hit = 0;
+    }
 
     /*弾関連*/ 
     public void reduceAmmo() { --remainingAmmo; }
     public void addAmmo(RecoverAmmo item) { remainingAmmo += (int)item.getItem(); }
+    public int getRemainingAmmo() { return remainingAmmo; }
 
     /*戦闘システム関連*/
     private void setDamageLevel() {
