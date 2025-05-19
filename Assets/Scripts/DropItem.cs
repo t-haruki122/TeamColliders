@@ -21,6 +21,7 @@ public class DropItem : MonoBehaviour
             else if (itemPrefab.name == "RecoverAmmoM") self = new recoverAmmom();
             else if (itemPrefab.name == "RecoverAmmoL") self = new recoverAmmol();
             else if (itemPrefab.name == "Key") self = new Key(itemProperty);
+            else if (itemPrefab.name == "SunGlasses") self = new SunGlasses(); // 遊び
             else
             {
                 Debug.Log(gameObject.name + ": Invalid itemPrefab: " + itemPrefab.name);
@@ -44,26 +45,32 @@ public class DropItem : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player")) {
             /* オブジェクトのクラスを比較して適切な処理をする */
-            if (self is Weapon) {
+            if (self is Weapon)
+            {
                 GameManager.GMInstance.setWeapon((Weapon)self);
-                Destroy(this.gameObject);
             }
-            else if (self is RecoverPP) {
+            else if (self is RecoverPP)
+            {
                 GameManager.GMInstance.addPP((RecoverPP)self);
-                Destroy(this.gameObject);
             }
-            else if (self is RecoverAmmo) {
+            else if (self is RecoverAmmo)
+            {
                 GameManager.GMInstance.addAmmo((RecoverAmmo)self);
-                Destroy(this.gameObject);
             }
-            else if (self is Key) {
+            else if (self is Key)
+            {
                 Debug.Log("Player got key: " + ((Key)self).getItem());
-                Destroy(this.gameObject);
             }
-            else {
+            else if (self is SunGlasses)
+            {
+                GameManager.GMInstance.setIsAct(false);
+            }
+            else
+            {
                 Debug.Log(this.gameObject.name + ": Item not set or unknown");
                 return;
             }
+            Destroy(this.gameObject);
             // 獲得メッセージ
             MessageStream.MSInstance.addMessage(new AcquireMessage(self));
         }

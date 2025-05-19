@@ -90,9 +90,17 @@ public class scorpion : Weapon
 public class Key : Item
 {
     private int keyID = 0;
-    public Key(int keyID) {
+    public Key(int keyID)
+    {
         this.keyID = keyID;
     }
     public override double getItem() { return keyID; }
     public override string itemName() { return "鍵"; }
+}
+
+/*=*==*==*==*=遊び=*==*==*==*=*/
+public class SunGlasses : Item
+{
+    public override double getItem() { return 0f; }
+    public override string itemName() { return "サングラス"; }
 }
