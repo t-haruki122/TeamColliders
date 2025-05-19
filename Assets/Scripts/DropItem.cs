@@ -11,22 +11,25 @@ public class DropItem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (!(itemPrefab == null)) {
-            if      (itemPrefab.name == "Scorpion")     self = new scorpion();
-            else if (itemPrefab.name == "RecoverPPS")   self = new recoverPPs();
-            else if (itemPrefab.name == "RecoverPPM")   self = new recoverPPm();
-            else if (itemPrefab.name == "RecoverPPL")   self = new recoverPPl();
+        if (!(itemPrefab == null))
+        {
+            if (itemPrefab.name == "Scorpion") self = new scorpion();
+            else if (itemPrefab.name == "RecoverPPS") self = new recoverPPs();
+            else if (itemPrefab.name == "RecoverPPM") self = new recoverPPm();
+            else if (itemPrefab.name == "RecoverPPL") self = new recoverPPl();
             else if (itemPrefab.name == "RecoverAmmoS") self = new recoverAmmos();
             else if (itemPrefab.name == "RecoverAmmoM") self = new recoverAmmom();
             else if (itemPrefab.name == "RecoverAmmoL") self = new recoverAmmol();
-            else if (itemPrefab.name == "Key")          self = new Key(itemProperty);
-            else {
+            else if (itemPrefab.name == "Key") self = new Key(itemProperty);
+            else
+            {
                 Debug.Log(gameObject.name + ": Invalid itemPrefab: " + itemPrefab.name);
                 return;
             }
             Instantiate(itemPrefab, transform.position, Quaternion.identity, transform);
         }
-        else {
+        else
+        {
             Debug.Log(gameObject.name + ": ItemPrefab not set to this object");
         }
     }
@@ -57,7 +60,12 @@ public class DropItem : MonoBehaviour
                 Debug.Log("Player got key: " + ((Key)self).getItem());
                 Destroy(this.gameObject);
             }
-            else Debug.Log(this.gameObject.name + ": Item not set or unknown");
+            else {
+                Debug.Log(this.gameObject.name + ": Item not set or unknown");
+                return;
+            }
+            // 獲得メッセージ
+            MessageStream.MSInstance.addMessage(new AcquireMessage(self));
         }
     }
 }
