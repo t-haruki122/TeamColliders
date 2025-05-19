@@ -75,3 +75,12 @@ crashlytics-build.properties
 
 # Ignore .DS_Store
 .DS_Store
+
+# Ignore Probuilder Settings
+ProjectSettings/Packages/com.unity.probuilder/Settings.json
+
+# Ignore TextMeshPro auto-generated fallback font (not necessary for version control)
+Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
+
+# Optional: Rider/JetBrains project settings
+.idea/
