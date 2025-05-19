@@ -4,19 +4,15 @@ using UnityEngine;
 
 using UnityEngine.UI; // slider(HPバー)用
 
-public class EnemyBehaviour : MonoBehaviour
+public class EnemyBehaviour : baseEnemy
 {
     // 発見UI用のビックリマークとはてなマークと沈黙マーク
     private GameObject TMP_exclamation;
     private GameObject TMP_question;
     private GameObject TMP_quiet;
 
-    // HPバー用のスライダー
-    private Slider enemyHPBar;
-
     // ゲームオブジェクト
-    private GameObject _self;
-    private GameObject _target;
+    private Slider enemyHPBar;
 
     // 他のスクリプトと共有する値
     public int damage;
@@ -24,54 +20,16 @@ public class EnemyBehaviour : MonoBehaviour
     // 値を共有するスクリプト
     private EnemyShot enemyShot;
 
-    // 敵のパラメータ
-    [SerializeField] float speed = 1.0f;
-    [SerializeField] float _sightAngle = 30.0f;
-    [SerializeField] float _maxDistance = 20.0f;
-    [SerializeField] int maxHP = 100;
-    [SerializeField] bool isFriendly = false;
-    [SerializeField] bool isIdleRotation = false;
-
     // 内部記憶_敵の記憶
     private Vector3 playerPositionMemory = new Vector3(0, 0, 0);
-    public int HP; // TODO 後でprivateに!
 
     // 内部記憶_システム変数
+    private bool isVisible = false;
     private bool isVisibleMemory = false;
     private int internalFrameCount = -1;
 
-    // ターゲットが円錐の中に入っているか調べる
-    private bool isInAngle()
-    {   
-        // ターゲットまでの向きと距離を計算
-        var targetDir = _target.transform.position - _self.transform.position;
-        var targetDistance = targetDir.magnitude;
-
-        // cos(θ/2)を計算
-        var cosHalf = Mathf.Cos(_sightAngle / 2 * Mathf.Deg2Rad);
-
-        // 自身とターゲットへの向きの内積計算
-        // ターゲットへの向きベクトルを正規化する必要があることに注意
-        var innerProduct = Vector3.Dot(_self.transform.forward, targetDir.normalized);
-
-        // 視界判定
-        return innerProduct > cosHalf && targetDistance < _maxDistance;
-    }
-
-    // ターゲットとの間にオブジェクトがないか調べる
-    private bool isNotObstructed()
-    {
-        // ターゲットまでの向きを計算
-        var targetDir = _target.transform.position - _self.transform.position;
-
-        // レイキャストで衝突判定
-        int layerMask = ~(1 << LayerMask.NameToLayer("IgnoreRaycast"));
-        if (Physics.Raycast(_self.transform.position, targetDir, out RaycastHit hit, Mathf.Infinity, layerMask))
-        {
-            return hit.collider.gameObject == _target;
-        }
-        return false;
-    }
+    // 敵のパラメータ
+    bool isIdleRotation;
 
     private void reset()
     {
@@ -80,14 +38,14 @@ public class EnemyBehaviour : MonoBehaviour
         TMP_quiet.SetActive(false);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    protected override void Spawn()
     {
-        _self = this.gameObject;
-        _target = GameObject.FindGameObjectWithTag("Player");
+        setBaseParams(
+            // 変更なし
+        );
+        isIdleRotation = true;
 
-        Transform _enemyShot = transform.Find("EnemyShot");
-        enemyShot = _enemyShot.GetComponent<EnemyShot>();
+        enemyShot = transform.Find("EnemyShot").GetComponent<EnemyShot>();
         enemyShot.isActiveEnemyShot = false;
 
         enemyHPBar = transform.Find("StatusUI/Canvas/EnemyHPBar").GetComponent<Slider>();
@@ -96,30 +54,21 @@ public class EnemyBehaviour : MonoBehaviour
         TMP_question = transform.Find("StanceUI/TMP_question").gameObject;
         TMP_quiet = transform.Find("StanceUI/TMP_quiet").gameObject;
 
-        HP = maxHP;
-
         reset();
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void Act()
     {
-        var isVisible = false;
+        isVisible = false;
     
         // HPの減算
+        // (damageには敵から受けたダメージが入っています)
         if (damage > 0) {
             HP -= damage;
             damage = 0;
 
             // プレイヤーを認知する
             isVisible = true;
-        }
-
-        // HPが0以下なら自身を破壊する
-        // TODO 破壊アニメーション
-        if (HP < 0) {
-            Destroy(this.gameObject);
-            return;
         }
 
         // HPバーの更新
@@ -140,11 +89,10 @@ public class EnemyBehaviour : MonoBehaviour
         transform.Find("Body/WingLeft").GetComponent<Renderer>().material.color = color;
         transform.Find("Body/Halo").GetComponent<Renderer>().material.color = color;
 
-        if (isFriendly) return;
         /****フレンドリーだったらこれより下の敵対ビヘイビアは考えない****/
 
         // プレイヤーが見えるか？
-        isVisible = isVisible? true: isInAngle() && isNotObstructed();
+        isVisible = isVisible? true: getIsVisible();
 
         // 発見UIの更新
         if (!isVisibleMemory && isVisible)
@@ -178,13 +126,13 @@ public class EnemyBehaviour : MonoBehaviour
         if (isVisible) // プレイヤーを視認しているとき
         {
             // プレイヤーメモリを更新
-            playerPositionMemory = _target.transform.position;
+            playerPositionMemory = target.transform.position;
             // プレイヤメモリのy座標をデフォルト値に
-            playerPositionMemory.Set(playerPositionMemory.x, _self.transform.position.y, playerPositionMemory.z);
+            playerPositionMemory.Set(playerPositionMemory.x, this.transform.position.y, playerPositionMemory.z);
             // プレイヤーの位置に移動
             transform.position = Vector3.MoveTowards(transform.position, playerPositionMemory, speed * Time.deltaTime);
             // プレイヤーの方を見る
-            transform.LookAt(_target.transform);
+            transform.LookAt(target.transform);
             // EnemyShotを有効化
             enemyShot.isActiveEnemyShot = true;
         }
@@ -218,9 +166,5 @@ public class EnemyBehaviour : MonoBehaviour
             // enemyshotを無効化
             enemyShot.isActiveEnemyShot = false;
         }
-
-        // 結果表示
-        // Debug.Log("isVisible:" + isVisible + " isVisibleMemory:" + isVisibleMemory + " ifc:" + internalFrameCount);
-        // Debug.Log("isInAngle: " + isInAngle() + ", isNotObstructed: " + isNotObstructed());
     }
 }

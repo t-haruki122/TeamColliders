@@ -30,6 +30,9 @@ public class GameManager : MonoBehaviour
     private bool isFiring = false;
     private bool isAiming = false;
 
+    /*敵関連*/
+    private bool isAct = true;
+
     /*<-+-*-~-=-=-~-*-+-eventMethod-+-*-~-=-=-~-*-+->*/
     void Awake() {
         if (GMInstance == null) {
@@ -127,6 +130,10 @@ public class GameManager : MonoBehaviour
         damageLevel *= damageCoefficient;
     }
     public int getDamage() { return (int) (damageLevel * baseDamage); }
+    public bool getIsAct() { return isAct; }
+    public void setIsAct(bool isAct) {
+        this.isAct = isAct;
+    }
 
     /*武器関連*/
     public bool getHasWeapon() { return (int)weapon.getItem() >= 1; }
