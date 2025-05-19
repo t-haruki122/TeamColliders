@@ -91,6 +91,7 @@ public abstract class baseEnemy : MonoBehaviour
         if (HP < 0) {
             // TODO 破壊アニメーション
             OnDestroy();
+            MessageStream.MSInstance.addMessage(new KillMessage(this.gameObject.name));
             Destroy(this.gameObject);
             return;
         }

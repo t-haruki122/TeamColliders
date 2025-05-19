@@ -83,8 +83,27 @@ public class AcquireMessage : Message
             item.itemAmount() == 0
                 ? $"{item.itemName()} を獲得"
                 : $"{item.itemName()} x{item.itemAmount()} を獲得"
+        ) {}
+}
+
+
+
+public class KillMessage : Message
+{
+    public KillMessage(string enemyName)
+        : base(
+            $"{enemyName} を倒した"
         )
-    {
-        Debug.Log("Acquired: " + item.GetType().Name + " / " + item.itemName());
-    }
+    { }
+}
+
+
+
+public class HitMessage : Message
+{
+    public HitMessage(string enemyName)
+        : base(
+            $"{enemyName} に攻撃された"
+        )
+    { }
 }
