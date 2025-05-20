@@ -59,15 +59,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("Warning: Player object not set in GM! plz confirm player has its tag");
         }
         else {
-            if (Player.transform.parent == null) {
-                Debug.Log("Warning: Player parent is null!");
-            }
-            else {
-                // 武器のゲームオブジェクトを取得
-                Scorpion = Player.transform.parent
-                    .Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion")
-                    .gameObject;
-            }
+            // 武器のゲームオブジェクトを取得
+            Scorpion = Player.transform.Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion").gameObject;
         }
 
         /* プレイヤーを素手に設定 */

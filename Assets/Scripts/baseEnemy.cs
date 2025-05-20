@@ -42,10 +42,14 @@ public abstract class baseEnemy : MonoBehaviour
         if (innerProduct < cosHalf) return false; // ターゲットが視野角外
 
         // レイキャストで障害物がないか判定
+        // target == playerの時
+        GameObject targetCollider = GameObject.FindGameObjectWithTag("PlayerCollider");
         int layerMask = ~(1 << LayerMask.NameToLayer("IgnoreRaycast"));
         if (Physics.Raycast(this.transform.position, targetDir, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
-            if (hit.collider.gameObject != target) return false; // 一番近くのオブジェクトがターゲットじゃない
+            // なんでIgnoreRaycastしてるのにPlayerColliderが反応してるの？
+            // Debug.Log(hit.collider.gameObject.name + " / " + target.name);
+            if (hit.collider.gameObject != targetCollider) return false; // 一番近くのオブジェクトがターゲットじゃない
         }
         else return false; // レイキャスト失敗
         return true; // ターゲットを視認している
@@ -85,12 +89,9 @@ public abstract class baseEnemy : MonoBehaviour
     }
 
     protected abstract void Act();
-    protected virtual void OnDestroy() {}
     void Update() {
         // HPが0以下なら自身を破壊する
         if (HP < 0) {
-            // TODO 破壊アニメーション
-            OnDestroy();
             MessageStream.MSInstance.addMessage(new KillMessage(this.gameObject.name));
             Destroy(this.gameObject);
             return;

@@ -13,6 +13,7 @@ TagManager:
   - Redbutton
   - Yellowbutton
   - Dropping
+  - PlayerCollider
   layers:
   - Default
   - TransparentFX
