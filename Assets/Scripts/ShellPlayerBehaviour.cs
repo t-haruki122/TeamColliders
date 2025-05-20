@@ -29,7 +29,7 @@ public class ShellPlayerBehaviour : MonoBehaviour
             else {
                 enemyBehaviour = other.transform.parent.parent.GetComponent<EnemyBehaviour>();
             }
-            enemyBehaviour.damage += 7;
+            enemyBehaviour.addDamage(7);
             Destroy(this.gameObject);
         }
         else if (other.gameObject.name == "Shell")

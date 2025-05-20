@@ -26,6 +26,10 @@ public abstract class baseEnemy : MonoBehaviour
     protected int HP;
     protected int attackDamage = 1; //hitcount per hit 
     protected RecoverAmmo item; //落とす弾のインスタンス
+
+    /*system*/
+    protected int damage = 0;
+    protected bool isGetDamageOnFrame = false;
     
     /*<-+-*-~-=-=-~-*-+-method-+-*-~-=-=-~-*-+->*/
     /// <summary>ターゲットが見えているかを判定する関数</summary>
@@ -90,6 +94,13 @@ public abstract class baseEnemy : MonoBehaviour
 
     protected abstract void Act();
     void Update() {
+        // HPの減算
+        bool isGetDamageOnFrame = damage > 0;
+        if (isGetDamageOnFrame) {
+            HP -= damage;
+            damage = 0;
+        }
+
         // HPが0以下なら自身を破壊する
         if (HP < 0) {
             MessageStream.MSInstance.addMessage(new KillMessage(this.gameObject.name));
@@ -106,5 +117,9 @@ public abstract class baseEnemy : MonoBehaviour
     /*倒された際弾を回復*/
     public void lootAmmo() { 
         if(item != null) GameManager.GMInstance.addAmmo(item); 
+    }
+
+    public void addDamage(int deltaDamage) {
+        this.damage += deltaDamage;
     }
 }

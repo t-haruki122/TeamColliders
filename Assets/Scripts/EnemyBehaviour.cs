@@ -14,9 +14,6 @@ public class EnemyBehaviour : baseEnemy
     // ゲームオブジェクト
     private Slider enemyHPBar;
 
-    // 他のスクリプトと共有する値
-    public int damage;
-
     // 値を共有するスクリプト
     private EnemyShot enemyShot;
 
@@ -31,7 +28,7 @@ public class EnemyBehaviour : baseEnemy
     // 敵のパラメータ
     bool isIdleRotation;
 
-    private void reset()
+    private void resetUI()
     {
         TMP_exclamation.SetActive(false);
         TMP_question.SetActive(false);
@@ -54,23 +51,11 @@ public class EnemyBehaviour : baseEnemy
         TMP_question = transform.Find("StanceUI/TMP_question").gameObject;
         TMP_quiet = transform.Find("StanceUI/TMP_quiet").gameObject;
 
-        reset();
+        resetUI();
     }
 
     protected override void Act()
     {
-        isVisible = false;
-    
-        // HPの減算
-        // (damageには敵から受けたダメージが入っています)
-        if (damage > 0) {
-            HP -= damage;
-            damage = 0;
-
-            // プレイヤーを認知する
-            isVisible = true;
-        }
-
         // HPバーの更新
         enemyHPBar.value = (float)HP / (float)maxHP;
 
@@ -89,23 +74,23 @@ public class EnemyBehaviour : baseEnemy
         transform.Find("Body/WingLeft").GetComponent<Renderer>().material.color = color;
         transform.Find("Body/Halo").GetComponent<Renderer>().material.color = color;
 
-        /****フレンドリーだったらこれより下の敵対ビヘイビアは考えない****/
+        /****敵対ビヘイビア****/
 
         // プレイヤーが見えるか？
-        isVisible = isVisible? true: getIsVisible();
+        isVisible = isGetDamageOnFrame || getIsVisible();
 
         // 発見UIの更新
         if (!isVisibleMemory && isVisible)
         {
             // ターゲットを発見
-            reset();
+            resetUI();
             internalFrameCount = 120;
             TMP_exclamation.SetActive(true);
         }
         if (isVisibleMemory && !isVisible)
         {
             // ターゲットが見えなくなった
-            reset();
+            resetUI();
             internalFrameCount = 120;
             TMP_quiet.SetActive(true);
         }
@@ -114,7 +99,7 @@ public class EnemyBehaviour : baseEnemy
         // 発見UIのフレームカウント
         if (internalFrameCount == 0)
         {
-            reset();
+            resetUI();
             internalFrameCount = -1;
         }
         if (internalFrameCount > 0)
@@ -158,7 +143,7 @@ public class EnemyBehaviour : baseEnemy
                 if (transform.position == playerPositionMemory)
                 {
                     playerPositionMemory = new Vector3(0, 0, 0);
-                    reset();
+                    resetUI();
                     internalFrameCount = 120;
                     TMP_question.SetActive(true);
                 }
