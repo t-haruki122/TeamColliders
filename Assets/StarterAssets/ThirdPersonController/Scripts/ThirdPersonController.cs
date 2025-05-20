@@ -102,6 +102,7 @@ namespace StarterAssets
 
         // フィールドに追加
         private int _jumpCount = 0;
+        private bool preGrounded = true;
         [SerializeField] private int _maxJumpCount = 2;
 
 
@@ -305,7 +306,10 @@ namespace StarterAssets
                     _verticalVelocity = -2f;
                 }
 
-                _jumpCount = 0;
+                if (!preGrounded && Grounded) {
+                    // Debug.Log("ジャンプカウントリセット");
+                    _jumpCount = 0;
+                }
 
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
@@ -339,6 +343,7 @@ namespace StarterAssets
                     Jump();
                 }
             }
+            preGrounded = Grounded;
 
             if (_verticalVelocity < _terminalVelocity)
             {
@@ -404,5 +409,8 @@ namespace StarterAssets
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }
+
+        public int getJumpCount() { return _jumpCount; }
+        public int getMaxJumpCount() { return _maxJumpCount; }
     }
 }
