@@ -55,6 +55,7 @@ public class PlayerShot : MonoBehaviour
             // 弾を発射
             GameObject shell = Instantiate(shellPrefab, transform.position, rotation);
             Rigidbody shellRb = shell.GetComponent<Rigidbody>();
+            GameManager.GMInstance.reduceAmmo();
 
             // 弾速は自由に設定
             shellRb.AddForce(transform.forward * shellSpeed);

@@ -47,7 +47,7 @@ public class DropItem : MonoBehaviour
             /* オブジェクトのクラスを比較して適切な処理をする */
             if (self is Weapon)
             {
-                GameManager.GMInstance.setWeapon((Weapon)self);
+                InventoryManager.IInstance.setInventorySlot( (int) ((Weapon)self).getItem());
             }
             else if (self is RecoverPP)
             {
