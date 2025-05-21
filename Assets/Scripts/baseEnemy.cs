@@ -73,7 +73,6 @@ public abstract class baseEnemy : MonoBehaviour
         float maxDistance = 20f,
         int maxHP = 100,
         bool isAct = false,
-        int HP = 0,
         int attackDamage = 1 //hitcount per hit 
     ) {
         this.speed = speed;
@@ -81,15 +80,14 @@ public abstract class baseEnemy : MonoBehaviour
         this.maxDistance = maxDistance;
         this.maxHP = maxHP;
         this.isAct = isAct;
-        this.HP = HP == 0 ? maxHP : HP;
         this.attackDamage = attackDamage;
     }
     protected abstract void Spawn();
     void Start() {
         target = GameObject.FindGameObjectWithTag("Player");
-        HP = maxHP;
 
         Spawn();
+        HP = maxHP;
     }
 
     protected abstract void Act();
@@ -98,6 +96,7 @@ public abstract class baseEnemy : MonoBehaviour
         bool isGetDamageOnFrame = damage > 0;
         if (isGetDamageOnFrame) {
             HP -= damage;
+            // ダメージエフェクト
             damage = 0;
         }
 
