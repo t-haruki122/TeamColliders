@@ -22,14 +22,15 @@ public class ShellPlayerBehaviour : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             // Debug.Log(other.gameObject.name + " was shot by player");
-            EnemyBehaviour enemyBehaviour;
+            baseEnemy enemyScript;
             if (other.gameObject.name == "Body") {
-                enemyBehaviour = other.transform.parent.GetComponent<EnemyBehaviour>();
+                enemyScript = other.transform.parent.GetComponent<baseEnemy>();
             }
             else {
-                enemyBehaviour = other.transform.parent.parent.GetComponent<EnemyBehaviour>();
+                enemyScript = other.transform.parent.parent.GetComponent<baseEnemy>();
             }
-            enemyBehaviour.addDamage(7);
+            int damage = GameManager.GMInstance.getDamage();
+            enemyScript.addDamage(damage);
             Destroy(this.gameObject);
         }
         else if (other.gameObject.name == "Shell")
