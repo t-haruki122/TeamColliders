@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     /*銃関連*/
     private const double damageCoefficient = 1.08;
-    private int baseDamage = 100;
+    private int baseDamage = 10;
     private int remainingAmmo = 100;
     private double damageLevel = 1.0;
     private Weapon weapon;
