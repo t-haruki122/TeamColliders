@@ -33,9 +33,6 @@ public class GameManager : MonoBehaviour
     /*敵関連*/
     private bool isAct = true;
 
-    /*inventorySystem*/
-    private InventoryManager inventory;
-
     /*<-+-*-~-=-=-~-*-+-eventMethod-+-*-~-=-=-~-*-+->*/
     void Awake() {
         if (GMInstance == null) {
@@ -48,7 +45,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inventory = new InventoryManager();
         Application.targetFrameRate = 60;
         preHit = hit;
         preCombo = combo;
