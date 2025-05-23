@@ -18,18 +18,7 @@ public class ScoreText : MonoBehaviour
     {
         if (GameManager.GMInstance != null) {
             scoreText.text = "SCORE : " + GameManager.GMInstance.getScore() 
-            + "\nPERFORMANCE : " + getRank(GameManager.GMInstance.getPP())
             + "\nCOMBO : " + GameManager.GMInstance.getCombo();
         }
-    }
-
-    /*ppに応じてランク付け*/
-    private string getRank(double pp) {
-        if (pp >= 2.0) return "X";
-        else if (pp >= 1.0) return "S";
-        else if (pp >= 0.9) return "A";
-        else if (pp >= 0.7) return "B";
-        else if (pp >= 0.5) return "C";
-        else return "D";
     }
 }

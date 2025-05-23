@@ -84,3 +84,4 @@ Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.as
 
 # Optional: Rider/JetBrains project settings
 .idea/
+ProjectSettings/Packages/com.unity.probuilder/Settings.json

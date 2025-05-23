@@ -44,8 +44,8 @@ public class PlayerShot : MonoBehaviour
             if (ballisticGapCompensation) {
                 if (Physics.Raycast(mainCamera.transform.position, mainCameraDir, out RaycastHit hit))
                 {
-                    if (hit.collider.gameObject.CompareTag("Enemy")) {
-                        Debug.Log("Player target: "+ hit.collider.gameObject.name);
+                    if (hit.collider.gameObject.CompareTag("EnemyCollider")) {
+                        // Debug.Log("Player target: "+ hit.collider.gameObject.name);
                         rotation = Quaternion.LookRotation(hit.collider.transform.GetComponent<Renderer>().bounds.center - transform.position);
                     }
                 }
