@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
     public int getCombo() { return combo; }
 
     private void setPP() {
-        pp = Math.Pow(hitCoefficient, hit) * (1 + Math.Sqrt(combo / weight));
+        pp = Math.Pow(hitCoefficient, hit) * (1.0 + Math.Sqrt((double)combo / (double)weight));
     }
 
     public double getPP() { return pp; }
