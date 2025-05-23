@@ -25,7 +25,7 @@ public class ShellBehaviour : MonoBehaviour
         {
             // Debug.Log("Player was shot");
             GameManager.GMInstance.addHit();
-            MessageStream.MSInstance.addMessage(new HitMessage(shellShooter));
+            // MessageStream.MSInstance.addMessage(new HitMessage(shellShooter));
         }
         if (other.gameObject.CompareTag("Enemy"))
         {
