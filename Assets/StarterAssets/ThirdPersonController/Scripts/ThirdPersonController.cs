@@ -97,11 +97,13 @@ namespace StarterAssets
         private int _animIDSpeed;
         private int _animIDGrounded;
         private int _animIDJump;
+        private int _animIDDoubleJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
         // フィールドに追加
         private int _jumpCount = 0;
+        private bool preGrounded = true;
         [SerializeField] private int _maxJumpCount = 2;
 
 
@@ -178,6 +180,7 @@ namespace StarterAssets
             _animIDSpeed = Animator.StringToHash("Speed");
             _animIDGrounded = Animator.StringToHash("Grounded");
             _animIDJump = Animator.StringToHash("Jump");
+            _animIDDoubleJump = Animator.StringToHash("DoubleJump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         }
@@ -297,6 +300,7 @@ namespace StarterAssets
                 if (_hasAnimator)
                 {
                     _animator.SetBool(_animIDJump, false);
+                    _animator.SetBool(_animIDDoubleJump, false);
                     _animator.SetBool(_animIDFreeFall, false);
                 }
 
@@ -305,7 +309,10 @@ namespace StarterAssets
                     _verticalVelocity = -2f;
                 }
 
-                _jumpCount = 0;
+                if (!preGrounded && Grounded) {
+                    // Debug.Log("ジャンプカウントリセット");
+                    _jumpCount = 0;
+                }
 
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
@@ -320,6 +327,7 @@ namespace StarterAssets
             else
             {
                 _jumpTimeoutDelta = JumpTimeout;
+                if (_jumpCount == 0) _jumpCount = 1;
 
                 if (_fallTimeoutDelta >= 0.0f)
                 {
@@ -339,6 +347,7 @@ namespace StarterAssets
                     Jump();
                 }
             }
+            preGrounded = Grounded;
 
             if (_verticalVelocity < _terminalVelocity)
             {
@@ -356,7 +365,17 @@ namespace StarterAssets
 
             if (_hasAnimator)
             {
-                _animator.SetBool(_animIDJump, true);
+                if (_jumpCount == 0) {
+                    // ジャンプ1段目
+                    _animator.SetBool(_animIDJump, true);
+                }
+                else if (_jumpCount == 1) {
+                    // ジャンプ2段目
+                    _animator.SetBool(_animIDDoubleJump, true);
+                }
+                else {
+                    Debug.Log("謎ジャンプ " + (_jumpCount + 1) + "段目");
+                }
             }
 
             _jumpCount++;
@@ -413,5 +432,8 @@ namespace StarterAssets
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
             }
         }
+
+        public int getJumpCount() { return _jumpCount; }
+        public int getMaxJumpCount() { return _maxJumpCount; }
     }
 }

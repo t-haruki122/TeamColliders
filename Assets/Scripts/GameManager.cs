@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     /*銃関連*/
     private const double damageCoefficient = 1.08;
-    private int baseDamage = 100;
+    private int baseDamage = 10;
     private int remainingAmmo = 100;
     private double damageLevel = 1.0;
     private Weapon weapon;
@@ -33,9 +33,6 @@ public class GameManager : MonoBehaviour
     /*敵関連*/
     private bool isAct = true;
 
-    /*inventorySystem*/
-    private InventoryManager inventory;
-
     /*<-+-*-~-=-=-~-*-+-eventMethod-+-*-~-=-=-~-*-+->*/
     void Awake() {
         if (GMInstance == null) {
@@ -48,7 +45,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inventory = new InventoryManager();
         Application.targetFrameRate = 60;
         preHit = hit;
         preCombo = combo;
@@ -59,15 +55,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("Warning: Player object not set in GM! plz confirm player has its tag");
         }
         else {
-            if (Player.transform.parent == null) {
-                Debug.Log("Warning: Player parent is null!");
-            }
-            else {
-                // 武器のゲームオブジェクトを取得
-                Scorpion = Player.transform.parent
-                    .Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion")
-                    .gameObject;
-            }
+            // 武器のゲームオブジェクトを取得
+            Scorpion = Player.transform.Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion").gameObject;
         }
 
         /* プレイヤーを素手に設定 */
@@ -112,7 +101,7 @@ public class GameManager : MonoBehaviour
     public int getCombo() { return combo; }
 
     private void setPP() {
-        pp = Math.Pow(hitCoefficient, hit) * (1 + Math.Sqrt(combo / weight));
+        pp = Math.Pow(hitCoefficient, hit) * (1.0 + Math.Sqrt((double)combo / (double)weight));
     }
 
     public double getPP() { return pp; }
