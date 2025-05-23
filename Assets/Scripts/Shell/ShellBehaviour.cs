@@ -21,7 +21,7 @@ public class ShellBehaviour : MonoBehaviour
     /// <param name="other">The Collision data associated with this collision.</param>
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("PlayerCollider"))
         {
             // Debug.Log("Player was shot");
             GameManager.GMInstance.addHit();
@@ -30,6 +30,10 @@ public class ShellBehaviour : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             return;
+        }
+        if (other.gameObject.CompareTag("Shell"))
+        {
+            // シェル同士がぶつからないようにする
         }
         Destroy(this.gameObject);
     }

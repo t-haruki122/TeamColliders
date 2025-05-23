@@ -19,26 +19,32 @@ public class ShellPlayerBehaviour : MonoBehaviour
     /// <param name="other">The Collision data associated with this collision.</param>
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("EnemyCollider"))
         {
-            // Debug.Log(other.gameObject.name + " was shot by player");
             baseEnemy enemyScript;
-            if (other.gameObject.name == "Body") {
-                enemyScript = other.transform.parent.GetComponent<baseEnemy>();
+            if (other.transform.parent.parent.GetComponent<baseEnemy>() == null)
+            {
+                Debug.Log("敵のスクリプトが見つかりません");
+                return;
             }
-            else {
-                enemyScript = other.transform.parent.parent.GetComponent<baseEnemy>();
-            }
+            enemyScript = other.transform.parent.parent.GetComponent<baseEnemy>();
+
+            // ダメージをゲームマネージャーから取得する
             int damage = GameManager.GMInstance.getDamage();
+
+            // 敵にダメージを与える
             enemyScript.addDamage(damage);
+
+            // シェルを破壊する
             Destroy(this.gameObject);
         }
         else if (other.gameObject.name == "Shell")
         {
-            // 敵のShellを破壊し進む
+            return; // なにもしない
         }
         if (!other.gameObject.CompareTag("Player"))
         {
+            // TODO shell破壊 アニメーション 音
             Destroy(this.gameObject);
         }
     }

@@ -15,7 +15,6 @@ using UnityEngine;
 public abstract class baseEnemy : MonoBehaviour
 {
     /*<-+-*-~-=-=-~-*-+-member-+-*-~-=-=-~-*-+->*/
-    protected GameObject target;
 
     /*status*/
     protected float speed = 1.0f;
@@ -23,18 +22,22 @@ public abstract class baseEnemy : MonoBehaviour
     protected float maxDistance = 20.0f;
     protected int maxHP = 100;
     protected bool isAct = false;
-    protected int HP;
     protected int attackDamage = 1; //hitcount per hit 
+    protected int score = 1000;
     protected RecoverAmmo item; //落とす弾のインスタンス
 
     /*system*/
+    protected int HP;
     protected int damage = 0;
     protected bool isGetDamageOnFrame = false;
-    
+    protected GameObject target;
+    protected GameObject targetCenter;
+    protected Transform colliders;
+
     /*<-+-*-~-=-=-~-*-+-method-+-*-~-=-=-~-*-+->*/
     /// <summary>ターゲットが見えているかを判定する関数</summary>
     protected bool getIsVisible()
-    {   
+    {
         // ターゲットまでの向きと距離を計算
         var targetDir = target.transform.position - this.transform.position;
         var targetDistance = targetDir.magnitude;
@@ -69,40 +72,86 @@ public abstract class baseEnemy : MonoBehaviour
     /// <param name="attackDamage">1回の攻撃で与えるダメージ</param>
     protected void setBaseParams(
         float speed = 1f,
-        float sightAngle = 30f,
+        float sightAngle = 45f,
         float maxDistance = 20f,
         int maxHP = 100,
         bool isAct = false,
-        int attackDamage = 1 //hitcount per hit 
-    ) {
+        int attackDamage = 1, //hitcount per hit
+        int score = 1000
+    )
+    {
         this.speed = speed;
         this.sightAngle = sightAngle;
         this.maxDistance = maxDistance;
         this.maxHP = maxHP;
         this.isAct = isAct;
         this.attackDamage = attackDamage;
+        this.score = score;
     }
+
+    protected void setRecoverAmmo(RecoverAmmo item)
+    {
+        this.item = item;
+    }
+
+    protected void lootAmmo()
+    {
+        if (item != null) GameManager.GMInstance.addAmmo(item);
+    }
+
+    protected void move(Vector3 targetPos)
+    {
+        // ターゲットの位置に移動
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+        transform.LookAt(targetPos);
+    }
+
+    protected void lookTarget()
+    {
+        this.transform.LookAt(targetCenter.transform);
+    }
+
+    /************ OVERRIDABLE METHOD ************/
     protected abstract void Spawn();
-    void Start() {
+    protected abstract void Act();
+    protected virtual void BossSpawn() {}
+    protected virtual void OnDeath() {}
+
+
+    /************ EVENT METHOD ************/
+    void Start()
+    {
+        colliders = this.transform.Find("Collider").transform;
         target = GameObject.FindGameObjectWithTag("Player");
+        targetCenter = GameObject.FindGameObjectWithTag("PlayerCollider");
+
+        setRecoverAmmo(new recoverAmmos());
 
         Spawn();
+        BossSpawn();
+
         HP = maxHP;
     }
 
-    protected abstract void Act();
-    void Update() {
+    void Update()
+    {
         // HPの減算
-        bool isGetDamageOnFrame = damage > 0;
-        if (isGetDamageOnFrame) {
+        isGetDamageOnFrame = damage > 0;
+        if (isGetDamageOnFrame)
+        {
             HP -= damage;
-            // ダメージエフェクト
+            // TODO ダメージエフェクト
             damage = 0;
         }
 
         // HPが0以下なら自身を破壊する
-        if (HP < 0) {
+        if (HP < 0)
+        {
             MessageStream.MSInstance.addMessage(new KillMessage(this.gameObject.name));
+            GameManager.GMInstance.addScore(score);
+            GameManager.GMInstance.addCombo();
+            lootAmmo();
+            OnDeath();
             Destroy(this.gameObject);
             return;
         }
@@ -113,11 +162,7 @@ public abstract class baseEnemy : MonoBehaviour
         Act();
     }
 
-    /*倒された際弾を回復*/
-    public void lootAmmo() { 
-        if(item != null) GameManager.GMInstance.addAmmo(item); 
-    }
-
+    /************ SHARE METHOD ************/
     public void addDamage(int deltaDamage) {
         this.damage += deltaDamage;
     }
