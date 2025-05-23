@@ -73,6 +73,9 @@ public class GameManager : MonoBehaviour
             preCombo = combo;
         }
         if (preHit != hit ) {
+            if (combo > 0) {
+                MessageStream.MSInstance.addMessage(new Message($"コンボリセット: {combo} > 0"));
+            }
             combo = 0;
             preCombo = 0;
             setPP();
@@ -107,8 +110,10 @@ public class GameManager : MonoBehaviour
     public double getPP() { return pp; }
 
     /*add score*/
-    public void addScore(int baseScore) {
-        score += (int) (baseScore * pp);
+    public int addScore(int baseScore)
+    {
+        score += (int)(baseScore * pp);
+        return (int)(baseScore * pp);
     }
     
     /*pp recover*/
