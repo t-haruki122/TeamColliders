@@ -147,8 +147,8 @@ public abstract class baseEnemy : MonoBehaviour
         // HPが0以下なら自身を破壊する
         if (HP < 0)
         {
-            MessageStream.MSInstance.addMessage(new KillMessage(this.gameObject.name));
-            GameManager.GMInstance.addScore(score);
+            int scoreDelta = GameManager.GMInstance.addScore(score);
+            MessageStream.MSInstance.addMessage(new KillMessage(gameObject.name, scoreDelta));
             GameManager.GMInstance.addCombo();
             lootAmmo();
             OnDeath();

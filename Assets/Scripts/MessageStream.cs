@@ -90,9 +90,9 @@ public class AcquireMessage : Message
 
 public class KillMessage : Message
 {
-    public KillMessage(string enemyName)
+    public KillMessage(string enemyName, int score)
         : base(
-            $"{enemyName} を倒した"
+            $"{enemyName} を倒した\nスコア +{score}"
         )
     { }
 }
