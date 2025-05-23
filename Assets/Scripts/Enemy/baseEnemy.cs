@@ -50,15 +50,19 @@ public abstract class baseEnemy : MonoBehaviour
 
         // レイキャストで障害物がないか判定
         // target == playerの時
-        GameObject targetCollider = GameObject.FindGameObjectWithTag("PlayerCollider");
+        GameObject targetCollider1 = GameObject.FindGameObjectWithTag("PlayerCollider");
+        GameObject targetCollider2 = GameObject.FindGameObjectWithTag("Player");
         int layerMask = ~(1 << LayerMask.NameToLayer("IgnoreRaycast"));
         if (Physics.Raycast(this.transform.position, targetDir, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
             // なんでIgnoreRaycastしてるのにPlayerColliderが反応してるの？
             // Debug.Log(hit.collider.gameObject.name + " / " + target.name);
-            if (hit.collider.gameObject != targetCollider) return false; // 一番近くのオブジェクトがターゲットじゃない
+            if (hit.collider.gameObject != targetCollider1 && hit.collider.gameObject != targetCollider2)
+            {
+                return false; // 一番近くのオブジェクトがターゲットじゃない
+            }
         }
-        else return false; // レイキャスト失敗
+            else return false; // レイキャスト失敗
         return true; // ターゲットを視認している
     }
 
