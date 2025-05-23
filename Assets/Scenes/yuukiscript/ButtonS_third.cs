@@ -4,40 +4,37 @@ using UnityEngine;
 
 public class ButtonS_third : MonoBehaviour
 {
-
-    private int pressCount = 0;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // タグごとの共通カウントを保持する辞書
+    private static Dictionary<string, int> tagPressCounts = new Dictionary<string, int>();
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            pressCount++;
+            string tag = gameObject.tag;
 
-            // 壁の移動方向：奇数回 → +15、偶数回 → -15
-            int direction = (pressCount % 2 == 1) ? 5 : -5;
+            // タグがまだ辞書にないなら初期化
+            if (!tagPressCounts.ContainsKey(tag))
+            {
+                tagPressCounts[tag] = 0;
+            }
 
-            // 赤：y軸方向、青：x軸方向、黄：z軸方向
-            if (gameObject.tag == "Redbutton")
+            // カウントをインクリメント
+            tagPressCounts[tag]++;
+
+            // 奇数回なら+5、偶数回なら-5
+            int direction = (tagPressCounts[tag] % 2 == 1) ? 5 : -5;
+
+            // 移動処理
+            if (tag == "Redbutton")
             {
                 MoveWalls("C_Red", new Vector3(0, direction, 0));
             }
-            else if (gameObject.tag == "Bluebutton")
+            else if (tag == "Bluebutton")
             {
                 MoveWalls("C_Blue", new Vector3(direction * 3, 0, 0));
             }
-            else if (gameObject.tag == "Yellowbutton")
+            else if (tag == "Yellowbutton")
             {
                 MoveWalls("C_Yellow", new Vector3(0, 0, direction * -3));
             }
