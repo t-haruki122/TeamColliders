@@ -17,8 +17,7 @@ public class ScoreText : MonoBehaviour
     void Update()
     {
         if (GameManager.GMInstance != null) {
-            scoreText.text = "SCORE : " + GameManager.GMInstance.getScore() 
-            + "\nCOMBO : " + GameManager.GMInstance.getCombo();
+            scoreText.text = GameManager.GMInstance.getScore().ToString();
         }
     }
 }
