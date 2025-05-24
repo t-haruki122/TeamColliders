@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8260945915404942675, guid: 83d48d45c74e144619e898986347d5db, type: 3}
       propertyPath: m_Name
-      value: DropItem
+      value: D_AmmoM
       objectReference: {fileID: 0}
     - target: {fileID: 8260945915404942677, guid: 83d48d45c74e144619e898986347d5db, type: 3}
       propertyPath: itemPrefab
@@ -21,15 +21,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.6458883
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.009001
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.2351
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8260945915404942681, guid: 83d48d45c74e144619e898986347d5db, type: 3}
       propertyPath: m_LocalRotation.w
