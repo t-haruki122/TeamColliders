@@ -18297,6 +18297,7 @@ GameObject:
   - component: {fileID: 946698544}
   - component: {fileID: 946698543}
   - component: {fileID: 946698545}
+  - component: {fileID: 946698546}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -18349,6 +18350,24 @@ MonoBehaviour:
   slot4: {fileID: 2134526566}
   slot5: {fileID: 641353466}
   slot6: {fileID: 1619830575}
+--- !u!114 &946698546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946698541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 669be83ced01d534787d9221caf03b18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RecoverPPS: {fileID: 8189250943328332883, guid: 3f82f7e693aad964ab54f02677d9535b, type: 3}
+  RecoverPPM: {fileID: 5259410970167858377, guid: 9fda762b7f6f2f547ad546d2f605b6c1, type: 3}
+  RecoverPPL: {fileID: 680016649536410091, guid: 119809668ddd5704db91c06a1d390691, type: 3}
+  RecoverAmmoS: {fileID: 3492521517626266187, guid: 96736b3ee3c8bd147a077c795737e443, type: 3}
+  RecoverAmmoM: {fileID: 1331862017380544212, guid: 64c0439b4f66fe942b07c5fdc6634a69, type: 3}
+  RecoverAmmoL: {fileID: 3899228731679525865, guid: f52ca1d79569b66439ed169bf44200cd, type: 3}
 --- !u!1 &956515913
 GameObject:
   m_ObjectHideFlags: 0

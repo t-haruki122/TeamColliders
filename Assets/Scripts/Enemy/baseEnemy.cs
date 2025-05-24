@@ -24,7 +24,7 @@ public abstract class baseEnemy : MonoBehaviour
     protected bool isAct = false;
     protected int attackDamage = 1; //hitcount per hit 
     protected int score = 1000;
-    protected RecoverAmmo item; //落とす弾のインスタンス
+    protected Item item; //落とす弾のインスタンス
 
     /*system*/
     protected int HP;
@@ -93,14 +93,14 @@ public abstract class baseEnemy : MonoBehaviour
         this.score = score;
     }
 
-    protected void setRecoverAmmo(RecoverAmmo item)
+    protected void setItem(Item item)
     {
         this.item = item;
     }
 
     protected void lootAmmo()
     {
-        if (item != null) GameManager.GMInstance.addAmmo(item);
+        if (item != null) GameManager.GMInstance.addAmmo((RecoverAmmo)item);
     }
 
     protected void move(Vector3 targetPos)
@@ -129,7 +129,7 @@ public abstract class baseEnemy : MonoBehaviour
         target = GameObject.FindGameObjectWithTag("Player");
         targetCenter = GameObject.FindGameObjectWithTag("PlayerCollider");
 
-        setRecoverAmmo(new recoverAmmos());
+        setItem(new recoverAmmos());
 
         Spawn();
         BossSpawn();
@@ -155,7 +155,14 @@ public abstract class baseEnemy : MonoBehaviour
             MessageStream.MSInstance.addMessage(new KillMessage(gameObject.name, scoreDelta));
             GameManager.GMInstance.addCombo();
             AudioManager.AMInstance.PlayEnemyDestroySound();
-            lootAmmo();
+            // lootAmmo();
+            // 敵の足元にドロップ用プレハブを生成
+            var dropPrefab = EnemyDropItemPrefab.EDIPInstance.GetPrefab(item);
+            if (dropPrefab != null)
+            {
+                Vector3 dropPos = transform.position + Vector3.down * 1f;
+                Instantiate(dropPrefab, dropPos, Quaternion.identity);
+            }
             OnDeath();
             Destroy(this.gameObject);
             return;
@@ -168,7 +175,8 @@ public abstract class baseEnemy : MonoBehaviour
     }
 
     /************ SHARE METHOD ************/
-    public void addDamage(int deltaDamage) {
+    public void addDamage(int deltaDamage)
+    {
         this.damage += deltaDamage;
     }
 }

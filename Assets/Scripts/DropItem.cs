@@ -8,6 +8,9 @@ public class DropItem : MonoBehaviour
     [SerializeField] protected int itemProperty = 0;
     private Item self;
     private bool used = false;
+    private bool isGrounded = false;
+    private float verticalVelocity = -1f;
+    private const float rayDistance = 0.5f; // 地面との接地判定距離
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +42,18 @@ public class DropItem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // 地面チェック
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, rayDistance + 0.01f);
 
+        if (!isGrounded)
+        {
+            transform.Translate(Vector3.up * verticalVelocity * Time.deltaTime);
+            verticalVelocity = -1f;
+        }
+        else
+        {
+            verticalVelocity = 0f; // 地面についたら落下停止
+        }
     }
 
     void OnTriggerEnter(Collider other)
