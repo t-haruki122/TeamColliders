@@ -86,7 +86,7 @@ public class InventoryManager : MonoBehaviour
             if (itemSprite[i] != null) {
                 slots[i].sprite = itemSprite[currentItem[i]];
             }
-            setSlotTags();
+            setSlotTags(i);
         }
     }
 
@@ -144,5 +144,12 @@ public class InventoryManager : MonoBehaviour
             default:
                 break;
         }
+    }
+    /*Keyを持っているかどうか*/
+    public bool hasKey(int keyId) {
+        for (int i = 1; i < inventorySize; ++i) {
+            if (currentItem[i] == keyId && keyId > 1) return true;
+        }
+        return false;
     }
 }
