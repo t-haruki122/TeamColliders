@@ -154,6 +154,7 @@ public abstract class baseEnemy : MonoBehaviour
             int scoreDelta = GameManager.GMInstance.addScore(score);
             MessageStream.MSInstance.addMessage(new KillMessage(gameObject.name, scoreDelta));
             GameManager.GMInstance.addCombo();
+            AudioManager.AMInstance.PlayEnemyDestroySound();
             lootAmmo();
             OnDeath();
             Destroy(this.gameObject);

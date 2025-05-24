@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class ShellPlayerBehaviour : MonoBehaviour
 {
+    private AudioSource audioSource;
+    public AudioClip hitSound;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     /// <param name="other">The Collision data associated with this collision.</param>
@@ -35,8 +38,15 @@ public class ShellPlayerBehaviour : MonoBehaviour
             // 敵にダメージを与える
             enemyScript.addDamage(damage);
 
-            // シェルを破壊する
-            Destroy(this.gameObject);
+            // ダメージ音を鳴らす
+            audioSource.PlayOneShot(hitSound, 0.25f);
+
+            // シェルを破壊したように見せる
+            GetComponent<Collider>().enabled = false;
+            GetComponent<Renderer>().enabled = false;
+
+            StartCoroutine(DestroyAfterSound());
+            return;
         }
         else if (other.gameObject.name == "Shell")
         {
@@ -47,5 +57,11 @@ public class ShellPlayerBehaviour : MonoBehaviour
             // TODO shell破壊 アニメーション 音
             Destroy(this.gameObject);
         }
+    }
+
+    IEnumerator DestroyAfterSound()
+    {
+        yield return new WaitForSeconds(hitSound.length);
+        Destroy(gameObject);
     }
 }

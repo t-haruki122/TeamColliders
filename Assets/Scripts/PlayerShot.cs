@@ -7,7 +7,6 @@ public class PlayerShot : MonoBehaviour
     public GameObject shellPrefab;
     private Animator animator;
 
-    // public AudioClip sound; // TODO
     public bool isActivePlayerShot = true;
     public int firingRate = 15;
     public int shellSpeed = 2000;
@@ -19,10 +18,15 @@ public class PlayerShot : MonoBehaviour
     // メインカメラ
     public GameObject mainCamera;
 
+    // 音
+    private AudioSource audioSource;
+    public AudioClip gunSound;
+
 
     void Start()
     {
         animator = transform.parent.GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -54,6 +58,7 @@ public class PlayerShot : MonoBehaviour
 
             // 弾を発射
             if (GameManager.GMInstance.getRemainingAmmo() > 0) {
+                audioSource.PlayOneShot(gunSound, 0.5f);
                 GameObject shell = Instantiate(shellPrefab, transform.position, rotation);
                 Rigidbody shellRb = shell.GetComponent<Rigidbody>();
                 GameManager.GMInstance.reduceAmmo();

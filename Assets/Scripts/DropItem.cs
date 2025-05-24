@@ -7,6 +7,7 @@ public class DropItem : MonoBehaviour
     [SerializeField] protected GameObject itemPrefab;
     [SerializeField] protected int itemProperty = 0;
     private Item self;
+    private bool used = false;
 
     // Start is called before the first frame update
     void Start()
@@ -38,41 +39,50 @@ public class DropItem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player")) {
+        if (used) return;
+        if (other.gameObject.CompareTag("Player"))
+        {
             /* オブジェクトのクラスを比較して適切な処理をする */
             if (self is Weapon)
             {
-                InventoryManager.IInstance.setInventorySlot( (int) ((Weapon)self).getItem());
+                InventoryManager.IInstance.setInventorySlot((int)((Weapon)self).getItem());
+                AudioManager.AMInstance.PlayDefaultAcquireSound();
             }
             else if (self is RecoverPP)
             {
                 GameManager.GMInstance.addPP((RecoverPP)self);
+                AudioManager.AMInstance.PlayRecoverPPSound();
             }
             else if (self is RecoverAmmo)
             {
                 GameManager.GMInstance.addAmmo((RecoverAmmo)self);
+                AudioManager.AMInstance.PlayRecoverAmmoSound();
             }
             else if (self is Key)
             {
                 Debug.Log("Player got key: " + ((Key)self).getItem());
+                AudioManager.AMInstance.PlayDefaultAcquireSound();
             }
             else if (self is SunGlasses)
             {
                 GameManager.GMInstance.setIsAct(false);
+                AudioManager.AMInstance.PlayDefaultAcquireSound();
             }
             else
             {
                 Debug.Log(this.gameObject.name + ": Item not set or unknown");
                 return;
             }
-            Destroy(this.gameObject);
+            used = true;
             // 獲得メッセージ
             MessageStream.MSInstance.addMessage(new AcquireMessage(self));
+            // ゲームオブジェクトを破壊
+            Destroy(this.gameObject);
         }
     }
 }
