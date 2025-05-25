@@ -148,7 +148,7 @@ public class InventoryManager : MonoBehaviour
     /*Keyを持っているかどうか*/
     public bool hasKey(int keyId) {
         for (int i = 1; i < inventorySize; ++i) {
-            if (currentItem[i] == keyId && keyId > 1) return true;
+            if (currentItem[i] - 1 == keyId && keyId > 1) return true;
         }
         return false;
     }

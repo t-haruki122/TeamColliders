@@ -79,7 +79,8 @@ public class DropItem : MonoBehaviour
             }
             else if (self is Key)
             {
-                Debug.Log("Player got key: " + ((Key)self).getItem());
+                Debug.Log("Player got key: " + ((Key)self).getItem() + "\nitemID: " + ((int)(((Key)self).getItem()) + 1));
+                InventoryManager.IInstance.setInventorySlot((int)(((Key)self).getItem()) + 1);
                 AudioManager.AMInstance.PlayDefaultAcquireSound();
             }
             else if (self is SunGlasses)

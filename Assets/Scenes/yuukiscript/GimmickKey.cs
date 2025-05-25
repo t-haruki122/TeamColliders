@@ -16,23 +16,37 @@ public class GimmickKey : MonoBehaviour
         collider = gate.GetComponent<BoxCollider>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    void Update()
     {
-        Debug.Log("触れたオブジェクト: " + other.name);
-
-        if (other.CompareTag("Player"))
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
         {
-            if (InventoryManager.IInstance.hasKey(requiredKeyId))
+            float threshold = 10f; // 距離の閾値（必要に応じて調整）
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (distance <= threshold)
             {
-                collider.isTrigger = true;
-                Debug.Log("鍵あり。ゲートを開きます。");
-            }
-            else
-            {
-                Debug.Log("必要な鍵を持っていません。");
+                openGate();
             }
         }
     }
+
+    private void openGate()
+    {
+        if (InventoryManager.IInstance.hasKey(requiredKeyId))
+        {
+            Debug.Log("鍵あり。ゲートを開きます。");
+            gate.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("必要な鍵を持っていません。");
+        }
+    }
+
+    // private void OnTriggerEnter(Collider other)
+    // {
+
+    // }
 
     private void OnTriggerExit(Collider other)
     { 
