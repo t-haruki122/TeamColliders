@@ -38,6 +38,7 @@ public class ButtonS_third : MonoBehaviour
             {
                 MoveWalls("C_Yellow", new Vector3(0, 0, direction * -3));
             }
+            AudioManager.AMInstance.PlayButtonSound();
         }
     }
 
