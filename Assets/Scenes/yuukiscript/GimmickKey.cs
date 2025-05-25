@@ -4,42 +4,43 @@ using UnityEngine;
 
 public class GimmickKey : MonoBehaviour
 {
-    // [SerializeField]
-    // private GimicMaster gimicControl;
-    // [SerializeField]
-    // private GameObject gate; 
-    // private BoxCollider collider;
+    [SerializeField]
+    private GameObject gate;
+    [SerializeField]
+    private int requiredKeyId = (int)ItemID.Key1;
 
-    // // Start is called before the first frame update
-    // void Start()
-    // {
-    //     collider = gate.GetComponent<BoxCollider>();
-    // }
+    private BoxCollider collider;
 
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     Debug.Log("触れたオブジェクト: " + other.name);
+    void Start()
+    {
+        collider = gate.GetComponent<BoxCollider>();
+    }
 
-    //     if (other.CompareTag("Player"))
-    //     {
-    //         if (gimicControl.item)
-    //         {
-    //             collider.isTrigger = true;
-    //         }
-    //     }
-    // }
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("触れたオブジェクト: " + other.name);
 
-    // private void OnTriggerExit(Collider other)
-    // { 
-    //     Debug.Log("触れたオブジェクト: " + other.name);
+        if (other.CompareTag("Player"))
+        {
+            if (InventoryManager.IInstance.hasKey(requiredKeyId))
+            {
+                collider.isTrigger = true;
+                Debug.Log("鍵あり。ゲートを開きます。");
+            }
+            else
+            {
+                Debug.Log("必要な鍵を持っていません。");
+            }
+        }
+    }
 
-    //     if (other.CompareTag("Player"))
-    //     {
-    //         if (gimicControl.item)
-    //         {
-    //             colider.isTrigger = false;
-    //         }
-    //     }
-    // }
+    private void OnTriggerExit(Collider other)
+    { 
+        Debug.Log("触れたオブジェクト: " + other.name);
 
+        if (other.CompareTag("Player"))
+        {
+            collider.isTrigger = false;
+        }
+    }
 }

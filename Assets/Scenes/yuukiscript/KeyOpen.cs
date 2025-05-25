@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class KeyOpen : MonoBehaviour
 {
-    // [SerializeField]
-    // private GimmickMaster gimmickControl;
-    // private void OnTriggerEnter(Collider other)
-    // { 
-    //     Debug.Log("触れたオブジェクト: " + other.name);
+    [SerializeField]
+    private int keyId = (int)ItemID.Key1;
+    private void OnTriggerEnter(Collider other)
+    { 
+        Debug.Log("触れたオブジェクト: " + other.name);
 
-    //     if (other.CompareTag("Player"))
-    //     {
-    //         gimmickControl.item = true;
-    //         this.gameObfect.GetComponent<MeshRenderer>().enabled = false;
-    //         this.gameObject.GetComponent<SphereCollider>().enabled = false;
-    //     }
-    // }
+        if (other.CompareTag("Player"))
+        {
+            InventoryManager.IInstance.setInventorySlot(keyId);
+            GetComponent<MeshRenderer>().enabled = false;
+            GetComponent<Collider>().enabled = false;
+        }
+    }
 }
