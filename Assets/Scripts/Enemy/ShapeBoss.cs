@@ -6,6 +6,7 @@ using UnityEngine.UI; // slider(HPバー)用
 
 public class ShapeBoss : ShapeEnemy
 {
+    [SerializeField] protected int keyID = 1;
     protected int internalFrameCountForState = 0;
     protected int state = 0;
     protected override void BossSpawn()
@@ -14,6 +15,7 @@ public class ShapeBoss : ShapeEnemy
             maxHP: 1000,
             score: 10000
         );
+        setItem(new recoverAmmol(), new Key(keyID));
     }
 
     protected override void Act()

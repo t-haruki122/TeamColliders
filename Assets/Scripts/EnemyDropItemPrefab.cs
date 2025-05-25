@@ -13,6 +13,7 @@ public class EnemyDropItemPrefab : MonoBehaviour
     [SerializeField] GameObject RecoverAmmoS;
     [SerializeField] GameObject RecoverAmmoM;
     [SerializeField] GameObject RecoverAmmoL;
+    [SerializeField] GameObject Key;
 
     void Awake()
     {
@@ -33,6 +34,7 @@ public class EnemyDropItemPrefab : MonoBehaviour
         if (RecoverAmmoS == null) Debug.LogError("RecoverAmmoS prefab is not assigned.", this);
         if (RecoverAmmoM == null) Debug.LogError("RecoverAmmoM prefab is not assigned.", this);
         if (RecoverAmmoL == null) Debug.LogError("RecoverAmmoL prefab is not assigned.", this);
+        if (Key == null) Debug.LogError("Key prefab is not assigned.", this);
     }
 
     void Update() { }
@@ -45,7 +47,8 @@ public class EnemyDropItemPrefab : MonoBehaviour
         if (item is recoverAmmos) return RecoverAmmoS;
         if (item is recoverAmmom) return RecoverAmmoM;
         if (item is recoverAmmol) return RecoverAmmoL;
-        Debug.LogWarning("No prefab found for item type: " + item.GetType().Name, this);
+        if (item is Key) return Key;
+        Debug.Log("No prefab found for item type: " + item.GetType().Name, this);
         return null;
     }
 }

@@ -99,4 +99,9 @@ public class DropItem : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    public void setItemProperty(int itemProperty)
+    {
+        this.itemProperty = itemProperty;
+    }
 }

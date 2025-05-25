@@ -24,7 +24,7 @@ public abstract class baseEnemy : MonoBehaviour
     protected bool isAct = false;
     protected int attackDamage = 1; //hitcount per hit 
     protected int score = 1000;
-    protected Item item; //落とす弾のインスタンス
+    protected List<Item> items; //落とすアイテムのリスト
 
     /*system*/
     protected int HP;
@@ -93,14 +93,30 @@ public abstract class baseEnemy : MonoBehaviour
         this.score = score;
     }
 
-    protected void setItem(Item item)
+    protected void setItem(params Item[] items)
     {
-        this.item = item;
+        // フィールドを初期化
+        this.items = new List<Item>(items);
     }
 
-    protected void lootAmmo()
+    protected void dropItems()
     {
-        if (item != null) GameManager.GMInstance.addAmmo((RecoverAmmo)item);
+        foreach (var item in items)
+        {
+            var dropPrefab = EnemyDropItemPrefab.EDIPInstance.GetPrefab(item);
+            if (dropPrefab == null) continue;
+            // 散らす範囲をランダムに設定
+            Vector3 scatter = new Vector3(
+                Random.Range(-1f, 1f),
+                -1f,
+                Random.Range(-1f, 1f)
+            );
+            var dropItem = Instantiate(dropPrefab, transform.position + scatter, Quaternion.identity);
+            if (item is Key)
+            {
+                dropItem.GetComponent<DropItem>().setItemProperty((int)((Key)item).getItem());
+            }
+        }
     }
 
     protected void move(Vector3 targetPos)
@@ -157,12 +173,7 @@ public abstract class baseEnemy : MonoBehaviour
             AudioManager.AMInstance.PlayEnemyDestroySound();
             // lootAmmo();
             // 敵の足元にドロップ用プレハブを生成
-            var dropPrefab = EnemyDropItemPrefab.EDIPInstance.GetPrefab(item);
-            if (dropPrefab != null)
-            {
-                Vector3 dropPos = transform.position + Vector3.down * 1f;
-                Instantiate(dropPrefab, dropPos, Quaternion.identity);
-            }
+            dropItems();
             OnDeath();
             Destroy(this.gameObject);
             return;

@@ -18368,6 +18368,7 @@ MonoBehaviour:
   RecoverAmmoS: {fileID: 3492521517626266187, guid: 96736b3ee3c8bd147a077c795737e443, type: 3}
   RecoverAmmoM: {fileID: 1331862017380544212, guid: 64c0439b4f66fe942b07c5fdc6634a69, type: 3}
   RecoverAmmoL: {fileID: 3899228731679525865, guid: f52ca1d79569b66439ed169bf44200cd, type: 3}
+  Key: {fileID: 1709605558828097201, guid: 8c8a0d62b74071e40b05f2367399e15e, type: 3}
 --- !u!1 &956515913
 GameObject:
   m_ObjectHideFlags: 0
@@ -47203,6 +47204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isIdleRotation: 0
+  keyID: 1
 --- !u!1 &1811780372
 GameObject:
   m_ObjectHideFlags: 0
