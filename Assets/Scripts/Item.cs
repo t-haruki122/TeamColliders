@@ -95,7 +95,7 @@ public class Key : Item
         this.keyID = keyID;
     }
     public override double getItem() { return keyID; }
-    public override string itemName() { return "鍵"; }
+    public override string itemName() { return $"鍵{keyID}"; }
 }
 
 /*=*==*==*==*=遊び=*==*==*==*=*/
