@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WalkwayMover : MonoBehaviour
 {
+    // 旧デザイン
     [Header("プレイヤー検出設定")]
     public Transform detectionPoint; // 床の中心位置
     public float detectionRange = 5f; // 検出範囲
@@ -19,15 +20,15 @@ public class WalkwayMover : MonoBehaviour
     void Update()
     {
         // プレイヤーを上方向にレイキャストで検出
-        RaycastHit hit;
-        if (Physics.Raycast(detectionPoint.position + Vector3.up * 0.1f, Vector3.up, out hit, detectionRange, playerLayer))
-        {
-            if (!isMoving)
-            {
-                Debug.Log("プレイヤー検出！移動開始");
-                isMoving = true;
-            }
-        }
+        // RaycastHit hit;
+        // if (Physics.Raycast(detectionPoint.position + Vector3.up * 0.1f, Vector3.up, out hit, detectionRange, playerLayer))
+        // {
+        //     if (!isMoving)
+        //     {
+        //         Debug.Log("プレイヤー検出！移動開始");
+        //         isMoving = true;
+        //     }
+        // }
 
         // 経路に沿って床を移動
         if (isMoving && currentIndex < pathPoints.Count)
@@ -42,5 +43,13 @@ public class WalkwayMover : MonoBehaviour
         }
     }
 
-    
+    // トリガーから呼び出される
+    public void StartMoving()
+    {
+        if (!isMoving)
+        {
+            Debug.Log("移動開始！");
+            isMoving = true;
+        }
+    }
 }

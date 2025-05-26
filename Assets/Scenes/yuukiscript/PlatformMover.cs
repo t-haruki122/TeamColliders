@@ -23,6 +23,13 @@ public class PlatformMover : MonoBehaviour
             StartCoroutine(MoveUp());
     }
 
+    // 戻る用
+    public void ReturnToStart()
+    {
+        if (!isMoving)
+            StartCoroutine(MoveDown());
+    }
+
     private System.Collections.IEnumerator MoveUp()
     {
         isMoving = true;
@@ -32,5 +39,19 @@ public class PlatformMover : MonoBehaviour
             yield return null;
         }
         transform.position = targetPos;
+        isMoving = false;
+    }
+
+    // 戻る用
+    private System.Collections.IEnumerator MoveDown()
+    {
+        isMoving = true;
+        while (Vector3.Distance(transform.position, startPos) > 0.01f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, startPos, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+        transform.position = startPos;
+        isMoving = false;
     }
 }
