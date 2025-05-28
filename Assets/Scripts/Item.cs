@@ -89,9 +89,10 @@ public class scorpion : Weapon
 /*=*==*==*==*=ワールドギミック関連=*==*==*==*=*/
 public class Key : Item
 {
-    private int keyID = 0;
+    private int keyID = 1;
     public Key(int keyID)
     {
+        if (keyID == 0) keyID = 1;
         this.keyID = keyID;
     }
     public override double getItem() { return keyID; }
