@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class MusicManager : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class MusicManager : MonoBehaviour
     [Header("ジングル")]
     [SerializeField]
     private List<AudioClip> jingleClips;
+
+    [SerializeField] protected AudioMixerGroup master;
 
 
 
@@ -86,15 +89,17 @@ public class MusicManager : MonoBehaviour
         MMInstance = this;
         DontDestroyOnLoad(gameObject);
 
+        // オーディオソースを追加
         musicSourceA = gameObject.AddComponent<AudioSource>();
         musicSourceB = gameObject.AddComponent<AudioSource>();
+
+        // ソースの出力をマスターに
+        musicSourceA.outputAudioMixerGroup = master;
+        musicSourceB.outputAudioMixerGroup = master;
+
+        // 内部処理用
         activeSource = musicSourceA;
         idleSource = musicSourceB;
-    }
-
-    void Start()
-    {
-        PlayMusic(MusicName.Field1A);
     }
 
 
