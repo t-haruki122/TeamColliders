@@ -58,16 +58,13 @@ public class PlayerShot : MonoBehaviour
 
             // 弾を発射
             if (GameManager.GMInstance.getRemainingAmmo() > 0) {
-                audioSource.PlayOneShot(gunSound, 0.5f);
+                audioSource.PlayOneShot(gunSound, 2f);
                 GameObject shell = Instantiate(shellPrefab, transform.position, rotation);
                 Rigidbody shellRb = shell.GetComponent<Rigidbody>();
                 GameManager.GMInstance.reduceAmmo();
     
                 // 弾速は自由に設定
                 shellRb.AddForce(transform.forward * shellSpeed);
-    
-                // 発射音を出す TODO
-                // AudioSource.PlayClipAtPoint(sound, transform.position);
     
                 // 3秒後に砲弾を破壊する
                 Destroy(shell, 3.0f);
