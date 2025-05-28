@@ -34,6 +34,9 @@ public abstract class baseEnemy : MonoBehaviour
     protected GameObject targetCenter;
     protected Transform colliders;
 
+    /*FX*/
+    protected GameObject explosionPrefab;
+
     /*<-+-*-~-=-=-~-*-+-method-+-*-~-=-=-~-*-+->*/
     /// <summary>ターゲットが見えているかを判定する関数</summary>
     protected bool getIsVisible()
@@ -151,6 +154,8 @@ public abstract class baseEnemy : MonoBehaviour
         BossSpawn();
 
         HP = maxHP;
+
+        explosionPrefab = ExplosionPrefab.EPInstance.getEnemyExplosionPrefab();
     }
 
     void Update()
@@ -171,7 +176,10 @@ public abstract class baseEnemy : MonoBehaviour
             MessageStream.MSInstance.addMessage(new KillMessage(gameObject.name, scoreDelta));
             GameManager.GMInstance.addCombo();
             AudioManager.AMInstance.PlayEnemyDestroySound();
-            // lootAmmo();
+
+            GameObject effect = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            Destroy(effect, 3f); // 3秒後に自動削除（エフェクトが終わるタイミング）
+            
             // 敵の足元にドロップ用プレハブを生成
             dropItems();
             OnDeath();

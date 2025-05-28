@@ -6,10 +6,12 @@ public class ShellBehaviour : MonoBehaviour
 {
     public string shellShooter = "敵";
 
+    protected GameObject explosionPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -35,6 +37,7 @@ public class ShellBehaviour : MonoBehaviour
         {
             // シェル同士がぶつからないようにする
         }
-        Destroy(this.gameObject);
+        gameObject.SetActive(false);
+        Destroy(this.gameObject, 3f);
     }
 }

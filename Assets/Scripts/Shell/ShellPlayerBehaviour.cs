@@ -7,21 +7,20 @@ public class ShellPlayerBehaviour : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip hitSound;
 
+    private GameObject explosionPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        explosionPrefab = ExplosionPrefab.EPInstance.getShellExplosionPrefab();
     }
 
     /// <param name="other">The Collision data associated with this collision.</param>
     void OnCollisionEnter(Collision other)
     {
+        if (other.gameObject.name == "Shell") return;
+        if (other.gameObject.CompareTag("Player")) return;
         if (other.gameObject.CompareTag("EnemyCollider"))
         {
             baseEnemy enemyScript;
@@ -37,26 +36,21 @@ public class ShellPlayerBehaviour : MonoBehaviour
 
             // 敵にダメージを与える
             enemyScript.addDamage(damage);
-
-            // ダメージ音を鳴らす
-            audioSource.PlayOneShot(hitSound, 0.25f);
-
-            // シェルを破壊したように見せる
-            GetComponent<Collider>().enabled = false;
-            GetComponent<Renderer>().enabled = false;
-
-            StartCoroutine(DestroyAfterSound());
-            return;
         }
-        else if (other.gameObject.name == "Shell")
-        {
-            return; // なにもしない
-        }
-        if (!other.gameObject.CompareTag("Player"))
-        {
-            // TODO shell破壊 アニメーション 音
-            Destroy(this.gameObject);
-        }
+
+        // ダメージ音を鳴らす
+        audioSource.PlayOneShot(hitSound, 0.25f);
+
+        // エフェクトを表示する
+        GameObject effect = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(effect, 3f); // 3秒後に自動削除（エフェクトが終わるタイミング）
+
+        // シェルを破壊したように見せる
+        GetComponent<Collider>().enabled = false;
+        GetComponent<Renderer>().enabled = false;
+
+        StartCoroutine(DestroyAfterSound());
+        return;
     }
 
     IEnumerator DestroyAfterSound()
