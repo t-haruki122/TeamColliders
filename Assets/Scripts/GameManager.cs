@@ -11,7 +11,9 @@ public class GameManager : MonoBehaviour
     private const double hitCoefficient = 0.95;
     private const int weight = 100;
     private int score = 0;
-    private double pp = 1;
+    private double pp;
+    private double insidePP = 1;
+    private double outsidePP = 0;
     private int hit = 0;
     private int combo = 0;
     private int preHit;
@@ -91,6 +93,7 @@ public class GameManager : MonoBehaviour
         // 右クリックを取得(武器を持っていなかったらADSできなくする)
         isAiming = getHasWeapon()? Input.GetMouseButton(1): false;
 
+        updatePP();
     }
 
     /*<-+-*-~-=-=-~-*-+-method-+-*-~-=-=-~-*-+->*/
@@ -103,8 +106,9 @@ public class GameManager : MonoBehaviour
     public int getScore() { return score; }
     public int getCombo() { return combo; }
 
+    private void updatePP() { pp = insidePP + outsidePP; }
     private void setPP() {
-        pp = Math.Pow(hitCoefficient, hit) * (1.0 + Math.Sqrt((double)combo / (double)weight));
+        insidePP = Math.Pow(hitCoefficient, hit) * (1.0 + Math.Sqrt((double)combo / (double)weight));
     }
 
     public double getPP() { return pp; }
@@ -117,7 +121,7 @@ public class GameManager : MonoBehaviour
     }
     
     /*pp recover*/
-    public void addPP(RecoverPP item) { pp += item.getItem(); }
+    public void addPP(RecoverPP item) { outsidePP += item.getItem(); }
     public void resetHit() {
         if (hit > 5) hit -= 5;
         else hit = 0;
