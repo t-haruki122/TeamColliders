@@ -25,6 +25,9 @@ public class ShapeEnemy : baseEnemy
     protected bool isVisibleMemory = false;
     protected int internalFrameCount = -1;
     protected int stance = 0;
+    protected Vector3 rot;
+    protected Vector3 axis = new Vector3(0f, 1f, 0f);
+    protected Vector3 playerPositionMemoryDefault = new Vector3(0, 0, 0);
 
     // 敵のパラメータ
     [SerializeField] protected bool isIdleRotation = true;
@@ -75,8 +78,8 @@ public class ShapeEnemy : baseEnemy
     }
 
     protected void rotateAtPosition(float angularSpeed) {
-        transform.RotateAround(transform.Find("Center").position, new Vector3(0f, 1f, 0f), Time.deltaTime * angularSpeed);
-        Vector3 rot = transform.eulerAngles;
+        transform.RotateAround(transform.Find("Center").position, axis, Time.deltaTime * angularSpeed);
+        rot = transform.eulerAngles;
         rot.x = 0f;
         rot.z = 0f;
         transform.eulerAngles = rot;
@@ -143,8 +146,7 @@ public class ShapeEnemy : baseEnemy
         enemyHPBar.value = (float)HP / (float)maxHP;
 
         // 色の更新
-        Color color = getColorFromHP();
-        changeColor(color);
+        // changeColor(getColorFromHP());
 
         // プレイヤーが見えるか？
         isVisible = isGetDamageOnFrame || getIsVisible();
@@ -166,23 +168,16 @@ public class ShapeEnemy : baseEnemy
         else // プレイヤーを視認していないとき
         {
             enemyShot.isActiveEnemyShot = false;
-            if (playerPositionMemory == new Vector3(0, 0, 0))
+            if (playerPositionMemory == playerPositionMemoryDefault)
             {
-                if (isIdleRotation)
-                {
-                    transform.RotateAround(transform.Find("Center").position, new Vector3(0f, 1f, 0f), Time.deltaTime * 45f);
-                    Vector3 rot = transform.eulerAngles;
-                    rot.x = 0f;
-                    rot.z = 0f;
-                    transform.eulerAngles = rot;
-                }
+                if (isIdleRotation) rotateAtPosition(45f);
             }
             else
             {
                 move(playerPositionMemory); // 記憶したプレイヤーの位置まで動く
                 if (transform.position == playerPositionMemory)
                 {
-                    playerPositionMemory = new Vector3(0, 0, 0);
+                    playerPositionMemory = playerPositionMemoryDefault;
                     stance = 3; // 完全に見失った
                 }
             }

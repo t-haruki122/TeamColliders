@@ -56,17 +56,18 @@ public abstract class baseEnemy : MonoBehaviour
         GameObject targetCollider1 = GameObject.FindGameObjectWithTag("PlayerCollider");
         GameObject targetCollider2 = GameObject.FindGameObjectWithTag("Player");
         int layerMask = ~(1 << LayerMask.NameToLayer("IgnoreRaycast"));
+        bool x = true;
         if (Physics.Raycast(this.transform.position, targetDir, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
             // なんでIgnoreRaycastしてるのにPlayerColliderが反応してるの？
             // Debug.Log(hit.collider.gameObject.name + " / " + target.name);
             if (hit.collider.gameObject != targetCollider1 && hit.collider.gameObject != targetCollider2)
             {
-                return false; // 一番近くのオブジェクトがターゲットじゃない
+                x = false; // 一番近くのオブジェクトがターゲットじゃない
             }
         }
-            else return false; // レイキャスト失敗
-        return true; // ターゲットを視認している
+        else x = false; // レイキャスト失敗
+        return x; // ターゲットを視認している
     }
 
     /// <summary>パラメータを敵にあわせて調整</summary>
