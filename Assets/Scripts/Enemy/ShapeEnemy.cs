@@ -32,8 +32,10 @@ public class ShapeEnemy : baseEnemy
     // 敵のパラメータ
     [SerializeField] protected bool isIdleRotation = true;
 
-    // 敵の初期色
+    // 色関連
     protected Color defaultColor;
+    protected MaterialPropertyBlock mpb;
+
 
     /*************** METHOD ***************/
     protected void resetUI()
@@ -47,14 +49,17 @@ public class ShapeEnemy : baseEnemy
     {
         if (colliders == null) return;
 
+        if (mpb == null)
+            mpb = new MaterialPropertyBlock();
+
         foreach (Transform _collider in colliders)
         {
             var renderer = _collider.GetComponent<Renderer>();
             if (renderer == null) continue;
 
-            // マテリアルを個別に複製（他オブジェクトに影響を与えない）
-            renderer.material = new Material(renderer.material);
-            renderer.material.color = color;
+            renderer.GetPropertyBlock(mpb);
+            mpb.SetColor("_Color", color);
+            renderer.SetPropertyBlock(mpb);
         }
     }
 
@@ -134,7 +139,15 @@ public class ShapeEnemy : baseEnemy
 
         enemyHPBar = transform.Find("StatusUI/Canvas/EnemyHPBar").GetComponent<Slider>();
 
-        defaultColor = transform.Find("Collider/Body").GetComponent<Renderer>().material.color;
+        Renderer renderer = transform.Find("Collider/Body").GetComponent<Renderer>();
+        if (mpb == null)
+            mpb = new MaterialPropertyBlock();
+        renderer.GetPropertyBlock(mpb);
+
+        if (!mpb.HasProperty("_Color"))
+            defaultColor = renderer.sharedMaterial.color;
+        else
+            defaultColor = mpb.GetColor("_Color");
 
         getStanceUI();
         resetUI();
