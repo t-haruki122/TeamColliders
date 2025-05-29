@@ -183,4 +183,13 @@ public class InventoryManager : MonoBehaviour
         }
         return false;
     }
+
+    public int getActiveSlot() { return this.activeSlot; }
+    public int getActiveItemID() { return currentItem[activeSlot]; }
+    public int getActiveKeyID()
+    {
+        int x = getActiveItemID();
+        if (x >= 2) return x - 1;
+        else return -1;
+    }
 }
