@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     /*<-+-*-~-=-=-~-*-+-member-+-*-~-=-=-~-*-+->*/
     /*スコア関連*/
     private const double hitCoefficient = 0.95;
-    private const int weight = 100;
+    private const int weight = 10;
     private int score = 0;
     private double pp;
     private double insidePP = 1;
