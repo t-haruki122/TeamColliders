@@ -45,7 +45,7 @@ public class ShapeBoss : ShapeEnemy
         
         // メインビヘイビア
         internalFrameCountForState++;
-        if (internalFrameCountForState % 120 == 0) {
+        if (internalFrameCountForState % 180 == 0) {
             internalFrameCountForState = 0;
             // ランダムステート
             switch (state) {
@@ -67,11 +67,13 @@ public class ShapeBoss : ShapeEnemy
         if (state == 2) {
             // プレイヤーに対して攻撃
             lookTarget();
+            enemyShot.setShotState(1);
             enemyShot.isActiveEnemyShot = true;
         }
         if (state == 3) {
             // 回転しながら攻撃
             rotateAtPosition(135f);
+            enemyShot.setShotState(0);
             enemyShot.isActiveEnemyShot = true;
         }
         if (state == 4) {
