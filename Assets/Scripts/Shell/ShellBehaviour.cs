@@ -38,6 +38,6 @@ public class ShellBehaviour : MonoBehaviour
             // シェル同士がぶつからないようにする
         }
         gameObject.SetActive(false);
-        Destroy(this.gameObject, 3f);
+        Destroy(this.gameObject, 0f);
     }
 }

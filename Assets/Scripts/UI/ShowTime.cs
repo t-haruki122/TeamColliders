@@ -22,15 +22,18 @@ public class ShowTime : MonoBehaviour
         if (isRunning)
         {
             elapsedTime += Time.deltaTime;
-
-            int minutes = (int)(elapsedTime / 60);
-            int seconds = (int)(elapsedTime % 60);
-            int hundredths = (int)((elapsedTime - Mathf.Floor(elapsedTime)) * 100);
-
-            showTime.text = string.Format("// {0:00}:{1:00}.{2:00}", minutes, seconds, hundredths);
+            showTime.text = getMMSS(elapsedTime);
         }
     }
-    
+    public string getMMSS(float elapsedTime) {
+        int minutes = (int)(elapsedTime / 60);
+        int seconds = (int)(elapsedTime % 60);
+        int hundredths = (int)((elapsedTime - Mathf.Floor(elapsedTime)) * 100);
+
+        return string.Format("// {0:00}:{1:00}.{2:00}", minutes, seconds, hundredths);
+    }
+    public float getElapsedTime() { return elapsedTime; }
+
     public void StopTimer()
     {
         isRunning = false;

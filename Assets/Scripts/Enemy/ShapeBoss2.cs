@@ -4,16 +4,17 @@ using UnityEngine;
 
 using UnityEngine.UI; // slider(HPバー)用
 
-public class ShapeBoss : ShapeEnemy
+public class ShapeBoss2 : ShapeEnemy
 {
     [SerializeField] protected int keyID = 1;
     protected int internalFrameCountForState = 0;
     protected int state = 0;
+    private int bossHPstate = 0;
     protected override void BossSpawn()
     {
         setBaseParams(
-            maxHP: 3600,
-            score: 80000
+            maxHP: 1200,
+            score: 50000
         );
         setItem(new recoverAmmol(), new Key(keyID));
     }
@@ -22,6 +23,10 @@ public class ShapeBoss : ShapeEnemy
     {
         // HPバーの更新
         enemyHPBar.value = (float)HP / (float)maxHP;
+
+        if (HP < 0.75f * maxHP && bossHPstate < 1) bossHPstate = 1;
+        else if (HP < 0.5f * maxHP && bossHPstate < 2) bossHPstate = 2;
+        else if (HP < 0.25f * maxHP && bossHPstate < 3) bossHPstate = 3;
 
         // 色の更新
         Color color = getColorFromHP();
@@ -51,14 +56,22 @@ public class ShapeBoss : ShapeEnemy
             switch (state) {
                 case 1: state = 2; break;
                 case 2: 
+                    enemyShot.setShotState(0);
                     state = 3;
-                    changePosY(-1f);
                     break;
                 case 3:
+                    enemyShot.setShotState(1);
+                    changePosY(-1f);
                     state = 4;
-                    changePosY(1f);
                     break;
-                case 4: state = 1; break;
+                case 4:
+                    changePosY(1f);
+                    enemyShot.setShotState(0);
+                    state = 5;
+                    break;
+                case 5:
+                    state = 1;
+                    break;
                 default: break;
             }
             Debug.Log("state: " + state);
@@ -73,15 +86,22 @@ public class ShapeBoss : ShapeEnemy
         if (state == 2) {
             // プレイヤーに対して攻撃
             lookTarget();
+            if (bossHPstate > 0) enemyShot.setShotState(1);
             enemyShot.isActiveEnemyShot = true;
         }
         if (state == 3) {
-            // 回転しながら攻撃
-            rotateAtPosition(240f);
-            enemyShot.setShotState(1);
+            // 移動攻撃
+            lookTarget();
+            rotateAtPosition(-240f);
+            if (bossHPstate > 1) enemyShot.setShotState(1);
             enemyShot.isActiveEnemyShot = true;
         }
         if (state == 4) {
+            // 回転しながら攻撃
+            rotateAtPosition(240f);
+            enemyShot.isActiveEnemyShot = true;
+        }
+        if (state == 5) {
             // プレイヤーに垂直に移動 TODO
             enemyShot.setShotState(0);
             enemyShot.isActiveEnemyShot = false;

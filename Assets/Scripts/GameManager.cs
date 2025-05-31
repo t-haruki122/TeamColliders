@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     private int combo = 0;
     private int preHit;
     private int preCombo;
+    private double elapsedTimebonus = 1;
 
     /*銃関連*/
     private const double damageCoefficient = 1.08;
@@ -81,6 +82,7 @@ public class GameManager : MonoBehaviour
             combo = 0;
             preCombo = 0;
             setPP();
+            outsidePP *= hitCoefficient;
             damageLevel = 1 + (damageLevel - 1) / 2; //comboが途切れると増加したダメージが半分になる
             preHit = hit;   
         }
