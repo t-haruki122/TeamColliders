@@ -5,15 +5,16 @@ using TMPro;
 
 public class ShowTime : MonoBehaviour
 {
+    public static ShowTime STInstance { get; private set;}
+
     [SerializeField] TextMeshProUGUI showTime;
 
     private float elapsedTime = 0f;
     private bool isRunning = true;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
+    void Awake() {
+        if (STInstance == null) STInstance = this;
+        else Destroy(gameObject);
     }
 
     // Update is called once per frame

@@ -1,22 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 using UnityEngine.UI; // slider(HPバー)用
 
 public class ShapeBoss2 : ShapeEnemy
-{
+{   
     [SerializeField] protected int keyID = 1;
+    [SerializeField] private GameObject smallEnemyPrefs;
     protected int internalFrameCountForState = 0;
     protected int state = 0;
     private int bossHPstate = 0;
     protected override void BossSpawn()
     {
         setBaseParams(
-            maxHP: 1200,
-            score: 50000
+            maxHP: 3200,
+            score: 80000
         );
-        setItem(new recoverAmmol(), new Key(keyID));
+        setItem(new recoverAmmos());
+    }
+
+    protected override void OnDeath() {
+        GameManager.GMInstance.savePlayerData(((int)(GameManager.GMInstance.getElapsedTimeBonus() * GameManager.GMInstance.getScore())).ToString(), 1);
+        GameManager.GMInstance.sortScore();
+        Destroy(this.gameObject);
+        SceneManager.LoadScene("Start");
     }
 
     protected override void Act()
@@ -24,9 +32,18 @@ public class ShapeBoss2 : ShapeEnemy
         // HPバーの更新
         enemyHPBar.value = (float)HP / (float)maxHP;
 
-        if (HP < 0.75f * maxHP && bossHPstate < 1) bossHPstate = 1;
-        else if (HP < 0.5f * maxHP && bossHPstate < 2) bossHPstate = 2;
-        else if (HP < 0.25f * maxHP && bossHPstate < 3) bossHPstate = 3;
+        if (HP < 0.75f * maxHP && bossHPstate < 1) {
+            bossHPstate = 1;
+            createSmallEnemy();
+        }
+        else if (HP < 0.5f * maxHP && bossHPstate < 2) {
+            bossHPstate = 2;
+            createSmallEnemy();
+        }
+        else if (HP < 0.25f * maxHP && bossHPstate < 3) {
+            bossHPstate = 3;
+            createSmallEnemy();
+        }
 
         // 色の更新
         Color color = getColorFromHP();
@@ -60,7 +77,7 @@ public class ShapeBoss2 : ShapeEnemy
                     state = 3;
                     break;
                 case 3:
-                    enemyShot.setShotState(1);
+                    enemyShot.setShotState(0);
                     changePosY(-1f);
                     state = 4;
                     break;
@@ -70,6 +87,7 @@ public class ShapeBoss2 : ShapeEnemy
                     state = 5;
                     break;
                 case 5:
+                    dropItems();
                     state = 1;
                     break;
                 default: break;
@@ -98,11 +116,12 @@ public class ShapeBoss2 : ShapeEnemy
         }
         if (state == 4) {
             // 回転しながら攻撃
+            if (bossHPstate > 2) enemyShot.setShotState(1);
             rotateAtPosition(240f);
             enemyShot.isActiveEnemyShot = true;
         }
         if (state == 5) {
-            // プレイヤーに垂直に移動 TODO
+            // プレイヤーに垂直に移動+弾提供
             enemyShot.setShotState(0);
             enemyShot.isActiveEnemyShot = false;
         }
@@ -111,5 +130,14 @@ public class ShapeBoss2 : ShapeEnemy
         Vector3 newPosition = transform.position;
         newPosition.y += y;
         transform.position = newPosition;
+    }
+    private void createSmallEnemy() {
+        GameObject[] smallEnemys = new GameObject[4];
+        Vector3[] relativePos = {new Vector3(2f, 0f, 0f), new Vector3(-2f, 0f, 0f), 
+        new Vector3(0f, 0f, 2f), new Vector3(0f, 0f, -2f)};
+
+        for (int i = 0; i < 4; ++i) {
+            smallEnemys[i] = Instantiate(smallEnemyPrefs, transform.position + relativePos[i], transform.rotation);
+        }
     }
 }

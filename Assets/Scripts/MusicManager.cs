@@ -87,7 +87,6 @@ public class MusicManager : MonoBehaviour
             return;
         }
         MMInstance = this;
-        DontDestroyOnLoad(gameObject);
 
         // オーディオソースを追加
         musicSourceA = gameObject.AddComponent<AudioSource>();

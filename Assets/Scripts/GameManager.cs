@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,7 +11,7 @@ public class GameManager : MonoBehaviour
     /*<-+-*-~-=-=-~-*-+-member-+-*-~-=-=-~-*-+->*/
     /*スコア関連*/
     private const double hitCoefficient = 0.95;
-    private const int weight = 10;
+    private const int weight = 20;
     private int score = 0;
     private double pp;
     private double insidePP = 1;
@@ -19,6 +21,11 @@ public class GameManager : MonoBehaviour
     private int preHit;
     private int preCombo;
     private double elapsedTimebonus = 1;
+    private const int PlayerScoreLength = 10;
+    private string[] playerScoreText = new string[PlayerScoreLength]; 
+    private int[] playerScores = new int[PlayerScoreLength]; 
+    private bool dataSavedFlag = false;
+    private int dataIndex = 0;
 
     /*銃関連*/
     private const double damageCoefficient = 1.08;
@@ -103,10 +110,34 @@ public class GameManager : MonoBehaviour
     /*hit, combo incrementer*/
     public void addHit() { ++hit; }
     public void addCombo() {++combo; }
+    /*主要変数初期化*/
+    public void initialize() {
+        score = 0;
+        insidePP = 1;
+        outsidePP = 0;
+        hit = 0;
+        combo = 0;
+        preHit = 0;
+        preCombo = 0;
+        baseDamage = 10;
+        remainingAmmo = 100;
+        elapsedTimebonus = 1;
+        damageLevel = 1;
+        dataSavedFlag = false;
+        //MusicManager.MMInstance.StopMusic();
+    }
+    /*elapsedTiemBonus*/
+    public double getElapsedTimeBonus() {
+        if (ShowTime.STInstance != null) {
+            return 1 + 1 / (1 + Math.Pow(Math.E, ShowTime.STInstance.getElapsedTime() / 150 - 3));
+        }
+        return 1;
+    }
 
     /*setter, getter*/
     public int getScore() { return score; }
     public int getCombo() { return combo; }
+    public int getPlayerScoreLength() { return PlayerScoreLength; }
 
     private void updatePP() { pp = insidePP + outsidePP; }
     private void setPP() {
@@ -128,6 +159,41 @@ public class GameManager : MonoBehaviour
         if (hit > 5) hit -= 5;
         else hit = 0;
     }
+    /*スコア集計*/
+    /*scoreデータを保存. 第二引数:type=0で名前, type=1でスコア*/
+    public void savePlayerData(string data, int type) {
+        for (int i = 0; i < PlayerScoreLength; ++i) {
+            if (string.IsNullOrEmpty(playerScoreText[i] ) || !dataSavedFlag && dataIndex == i) {
+                /*type:0なら名前を保存*/
+                if (type == 0) playerScoreText[i] = "\n" + data;
+                /*type:1ならスコアを保存*/
+                else if (type == 1) {
+                    playerScoreText[i] += " : " + data;
+                    playerScores[i] = int.Parse(data);
+                    dataSavedFlag = true; //playerNameとscoreの保存完了
+                    ++dataIndex;
+                }
+                break;
+            }
+        }
+    }
+    /*スコア順に並び替え*/
+    public void sortScore() {
+        /*名前とスコアをペアにする*/
+        List<KeyValuePair<string, int>> playerDatas = new List<KeyValuePair<string, int>>();
+        for (int i = 0; i < PlayerScoreLength; ++i) playerDatas.Add(new KeyValuePair<string, int>(playerScoreText[i], playerScores[i]));
+
+        /*スコア順にソート*/
+        var sortedPlayerDatas = playerDatas.OrderByDescending(pair => pair.Value).ToList();
+        for (int i = 0; i < PlayerScoreLength; ++i) {
+            var (name, score) = sortedPlayerDatas[i];
+            playerScoreText[i] = name;
+            playerScores[i] = score;
+        }
+        
+    }
+    /*playerScoreTextのgetter*/
+    public string[] getplayerScoreText() { return playerScoreText; }
 
     /*弾関連*/ 
     public void reduceAmmo() { --remainingAmmo; }

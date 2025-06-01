@@ -12,10 +12,14 @@ public class ShapeBoss : ShapeEnemy
     protected override void BossSpawn()
     {
         setBaseParams(
-            maxHP: 3600,
-            score: 80000
+            maxHP: 1200,
+            score: 50000
         );
         setItem(new recoverAmmol(), new Key(keyID));
+    }
+
+    protected override void OnDeath() {
+        GameManager.GMInstance.resetHit();
     }
 
     protected override void Act()
