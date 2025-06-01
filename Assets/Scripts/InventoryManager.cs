@@ -66,7 +66,7 @@ public class InventoryManager : MonoBehaviour
             outlines[i].enabled = false;
             currentItem[i] = (int)ItemID.None;
         }
-        outlines[0].enabled = true;
+        setActiveSlot(0);
     }
 
     // Update is called once per frame

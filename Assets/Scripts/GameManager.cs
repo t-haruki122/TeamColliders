@@ -49,7 +49,18 @@ public class GameManager : MonoBehaviour
             GMInstance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else Destroy(gameObject);
+        else {
+            if (Player == null) {
+                Player = GameObject.FindWithTag("Player");
+                if (Player == null) Debug.Log("Player not set in GM, while tried to get Player again");
+            }
+            if (Scorpion == null && Player != null) {
+                Scorpion = Player.transform.Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion").gameObject;
+                if (Scorpion == null) Debug.Log("Scorpion not set in GM, while tried to get Scorpion again");
+                else setWeapon(new unarmed());
+            }
+            Destroy(gameObject);
+        }
     }
 
     // Start is called before the first frame update
