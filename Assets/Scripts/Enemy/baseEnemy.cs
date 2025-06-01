@@ -184,7 +184,7 @@ public abstract class baseEnemy : MonoBehaviour
             // 敵の足元にドロップ用プレハブを生成
             dropItems();
             OnDeath();
-            Destroy(this.gameObject);
+            if (this.gameObject != null) Destroy(this.gameObject);
             return;
         }
 

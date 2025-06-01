@@ -19,13 +19,6 @@ public class InventoryManager : MonoBehaviour
     public static InventoryManager IInstance {get; private set;}
 
     /*<-+-*-~-=-=-~-*-+-member-+-*-~-=-=-~-*-+->*/
-    /*slotのオブジェクト本体*/
-    [SerializeField] private GameObject slot1;
-    [SerializeField] private GameObject slot2;
-    [SerializeField] private GameObject slot3;
-    [SerializeField] private GameObject slot4;
-    [SerializeField] private GameObject slot5;
-    [SerializeField] private GameObject slot6;
     /*player*/
     private StarterAssets.ThirdPersonController player;
     /*inventory関連*/
@@ -48,13 +41,14 @@ public class InventoryManager : MonoBehaviour
     }
 
     void Start()
-    {
-        slots[0] = slot1.GetComponent<Image>(); 
-        slots[1] = slot2.GetComponent<Image>();
-        slots[2] = slot3.GetComponent<Image>();
-        slots[3] = slot4.GetComponent<Image>();
-        slots[4] = slot5.GetComponent<Image>();
-        slots[5] = slot6.GetComponent<Image>();
+    {   
+        Transform panelTransform = transform.Find("IPanel");
+        if (panelTransform != null) {
+            for (int i = 0; i < 6; ++i) {
+                slots[i] = panelTransform.GetChild(i).gameObject.GetComponent<Image>();
+            }
+        }
+        else Debug.Log("slot reference is null");
 
         player = GameObject.FindWithTag("Player").GetComponent<StarterAssets.ThirdPersonController>();
 
