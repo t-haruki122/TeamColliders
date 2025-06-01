@@ -12,6 +12,7 @@ public class EnemyShot : MonoBehaviour
     public float shellDestroyTime = 5.0f;
     private int shotState = 0;  //0:単発, 1:散弾
     private int frameCount = 0;
+    private bool isChasingPlayer = true;
 
     void Start()
     {
@@ -20,6 +21,8 @@ public class EnemyShot : MonoBehaviour
 
     void Update()
     {
+        if (isChasingPlayer) transform.LookAt(GameObject.FindGameObjectWithTag("PlayerCollider").transform);
+
         if (!isActiveEnemyShot)
         {
             return;
@@ -43,6 +46,7 @@ public class EnemyShot : MonoBehaviour
         }
     }
     public void setShotState(int state) { shotState = state; }
+    public void setIsChasingPlayer(bool TF) { isChasingPlayer = TF; }
 
     private void baseAct() {
         GameObject shell = Instantiate(shellPrefab, transform.position, transform.rotation);

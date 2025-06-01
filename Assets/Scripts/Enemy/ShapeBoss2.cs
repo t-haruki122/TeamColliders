@@ -80,11 +80,13 @@ public class ShapeBoss2 : ShapeEnemy
                     enemyShot.setShotState(0);
                     changePosY(-1f);
                     state = 4;
+                    if (bossHPstate < 3) enemyShot.setIsChasingPlayer(false);
                     break;
                 case 4:
                     changePosY(1f);
                     enemyShot.setShotState(0);
                     state = 5;
+                    enemyShot.setIsChasingPlayer(true);
                     break;
                 case 5:
                     dropItems();

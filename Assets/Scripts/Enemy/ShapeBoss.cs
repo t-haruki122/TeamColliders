@@ -56,10 +56,12 @@ public class ShapeBoss : ShapeEnemy
                 case 1: state = 2; break;
                 case 2: 
                     state = 3;
+                    enemyShot.setIsChasingPlayer(false);
                     changePosY(-1f);
                     break;
                 case 3:
                     state = 4;
+                    enemyShot.setIsChasingPlayer(true);
                     changePosY(1f);
                     break;
                 case 4: state = 1; break;
