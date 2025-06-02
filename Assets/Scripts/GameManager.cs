@@ -34,8 +34,8 @@ public class GameManager : MonoBehaviour
     private double damageLevel = 1.0;
     private Weapon weapon;
 
-    private GameObject Player;
-    private GameObject Scorpion;
+    private static GameObject Player;
+    private static GameObject Scorpion;
 
     private bool isFiring = false;
     private bool isAiming = false;
@@ -50,14 +50,20 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
         else {
-            if (Player == null) {
+            if (Player == null)
+            {
                 Player = GameObject.FindWithTag("Player");
                 if (Player == null) Debug.Log("Player not set in GM, while tried to get Player again");
+                else Debug.Log("Player Set");
             }
             if (Scorpion == null && Player != null) {
                 Scorpion = Player.transform.Find("Skeleton/Hips/Spine/Chest/UpperChest/Right_Shoulder/Right_UpperArm/Right_LowerArm/Right_Hand/Scorpion").gameObject;
                 if (Scorpion == null) Debug.Log("Scorpion not set in GM, while tried to get Scorpion again");
-                else setWeapon(new unarmed());
+                else
+                {
+                    setWeapon(new unarmed());
+                    Debug.Log("Scorpion Set");
+                }
             }
             Destroy(gameObject);
         }
