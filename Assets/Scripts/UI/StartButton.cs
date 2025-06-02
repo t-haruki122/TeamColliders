@@ -12,25 +12,36 @@ public class StartButton : MonoBehaviour
     [SerializeField] private TextMeshProUGUI displayScore;
     private Text errorText;
     private Transform loading;
+    private string[] rankHeader = {"1st.", "2nd.", "3rd.", "4th.", "5th.",
+    "6th.", "7th."};
 
-    /*<-+-*-~-=-=-~-*-+-eventMethod-+-*-~-=-=-~-*-+->*/  
-    void Start() {
+    /*<-+-*-~-=-=-~-*-+-eventMethod-+-*-~-=-=-~-*-+->*/
+    void Start()
+    {
         loading = transform.Find("Loading");
         loading.gameObject.SetActive(false);
 
         string[] temp = GameManager.GMInstance.getplayerScoreText();
 
-        for (int i = 0, len = GameManager.GMInstance.getPlayerScoreLength(); i < len; ++i) {
-            if (!string.IsNullOrEmpty(temp[i])) displayScore.text += temp[i];
+        for (int i = 0, len = GameManager.GMInstance.getPlayerScoreLength(); i < len; ++i)
+        {
+            if (!string.IsNullOrEmpty(temp[i])) displayScore.text += "\n" + rankHeader[i] + "\t" + temp[i];
+            else break;
         }
     }
+    void Update()
+    {
+        
+    }
 
-    public void OnStartButtonClicked() {
+    public void OnStartButtonClicked()
+    {
         loading.gameObject.SetActive(true); //Now Loading...を表示
 
         string playerName = name.text;
 
-        if (string.IsNullOrEmpty(playerName)) {
+        if (string.IsNullOrEmpty(playerName))
+        {
             errorText.text = "Please enter your name";
             return;
         }

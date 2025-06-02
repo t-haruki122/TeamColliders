@@ -21,11 +21,11 @@ public class GameManager : MonoBehaviour
     private int preHit;
     private int preCombo;
     private double elapsedTimebonus = 1;
-    private const int PlayerScoreLength = 10;
+    private const int PlayerScoreLength = 7;
     private string[] playerScoreText = new string[PlayerScoreLength]; 
     private int[] playerScores = new int[PlayerScoreLength]; 
     private bool dataSavedFlag = false;
-    private int dataIndex = 0;
+    private int currentDataIndex = 0;
 
     /*銃関連*/
     private const double damageCoefficient = 1.08;
@@ -173,19 +173,14 @@ public class GameManager : MonoBehaviour
     /*スコア集計*/
     /*scoreデータを保存. 第二引数:type=0で名前, type=1でスコア*/
     public void savePlayerData(string data, int type) {
-        for (int i = 0; i < PlayerScoreLength; ++i) {
-            if (string.IsNullOrEmpty(playerScoreText[i] ) || !dataSavedFlag && dataIndex == i) {
-                /*type:0なら名前を保存*/
-                if (type == 0) playerScoreText[i] = "\n" + data;
-                /*type:1ならスコアを保存*/
-                else if (type == 1) {
-                    playerScoreText[i] += " : " + data;
-                    playerScores[i] = int.Parse(data);
-                    dataSavedFlag = true; //playerNameとscoreの保存完了
-                    ++dataIndex;
-                }
-                break;
-            }
+        /*type:0なら名前を保存*/
+        if (type == 0) playerScoreText[currentDataIndex] = data;
+        /*type:1ならスコアを保存*/
+        else if (type == 1) {
+            playerScoreText[currentDataIndex] += " : " + data;
+            playerScores[currentDataIndex] = int.Parse(data);
+            dataSavedFlag = true; //playerNameとscoreの保存完了
+            if (++currentDataIndex == PlayerScoreLength) --currentDataIndex; 
         }
     }
     /*スコア順に並び替え*/

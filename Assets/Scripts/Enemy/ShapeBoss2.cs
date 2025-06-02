@@ -14,13 +14,14 @@ public class ShapeBoss2 : ShapeEnemy
     protected override void BossSpawn()
     {
         setBaseParams(
-            maxHP: 3200,
+            maxHP: 20,
             score: 80000
         );
         setItem(new recoverAmmos());
     }
-
-    protected override void OnDeath() {
+    
+    protected override void OnDeath()
+    {
         GameManager.GMInstance.savePlayerData(((int)(GameManager.GMInstance.getElapsedTimeBonus() * GameManager.GMInstance.getScore())).ToString(), 1);
         GameManager.GMInstance.sortScore();
         Destroy(this.gameObject);
